@@ -1,0 +1,2307 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>传承八字 · 原型</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+
+:root {
+  --ink: #2D2D2D;
+  --accent: #B5453A;
+  --bg: #F5F0E8;
+  --surface: #FFFDF7;
+  --text: #333;
+  --text2: #666;
+  --text3: #999;
+  --wood: #4A7C59;
+  --fire: #C84B31;
+  --earth: #C4A35A;
+  --metal: #8C8C8C;
+  --water: #2C5F7C;
+  --serif: 'Noto Serif SC', serif;
+  --sans: -apple-system, 'PingFang SC', 'Helvetica Neue', sans-serif;
+}
+
+body {
+  font-family: var(--sans);
+  background: #E8E0D6;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 100vh;
+  padding: 20px 0;
+}
+
+/* Phone frame */
+.phone {
+  width: 390px;
+  height: 844px;
+  background: var(--bg);
+  border-radius: 40px;
+  overflow: hidden;
+  position: relative;
+  box-shadow: 0 20px 80px rgba(0,0,0,0.3), 0 0 0 8px #1a1a1a, 0 0 0 10px #333;
+}
+
+.phone-inner {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  position: relative;
+}
+
+/* Status bar */
+.status-bar {
+  height: 54px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  padding: 0 28px 8px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+}
+
+/* Screens */
+.screen {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s;
+  -webkit-overflow-scrolling: touch;
+}
+
+.screen.hidden {
+  transform: translateX(100%);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.screen.hidden-left {
+  transform: translateX(-30%);
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Tab bar */
+.tab-bar {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 83px;
+  background: var(--surface);
+  border-top: 1px solid rgba(0,0,0,0.06);
+  display: flex;
+  padding-bottom: 20px;
+  z-index: 200;
+}
+
+.tab-bar .tab {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  cursor: pointer;
+  color: var(--text3);
+  font-size: 10px;
+  transition: color 0.2s;
+}
+
+.tab-bar .tab.active { color: var(--accent); }
+
+.tab-bar .tab .tab-icon {
+  font-size: 22px;
+  line-height: 1;
+}
+
+/* ==================== */
+/* Screen 0: Onboarding */
+/* ==================== */
+#screen-onboarding {
+  background: var(--ink);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 300;
+}
+
+#screen-onboarding .master-photo {
+  width: 200px;
+  height: 250px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #3a3a3a 0%, #2a2a2a 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 40px;
+  border: 1px solid rgba(255,255,255,0.08);
+  position: relative;
+  overflow: hidden;
+}
+
+.master-photo::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(circle at 50% 30%, rgba(181,69,58,0.1) 0%, transparent 70%);
+}
+
+.master-photo svg {
+  width: 80px;
+  height: 80px;
+  opacity: 0.2;
+}
+
+#screen-onboarding h1 {
+  font-family: var(--serif);
+  color: var(--bg);
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: 4px;
+  margin-bottom: 16px;
+}
+
+#screen-onboarding .subtitle {
+  color: rgba(245,240,232,0.5);
+  font-size: 14px;
+  margin-bottom: 60px;
+  letter-spacing: 2px;
+}
+
+.btn-primary {
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  padding: 16px 60px;
+  border-radius: 50px;
+  font-size: 17px;
+  font-weight: 600;
+  cursor: pointer;
+  letter-spacing: 2px;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.btn-primary:active { transform: scale(0.96); }
+
+.btn-primary:hover { box-shadow: 0 4px 20px rgba(181,69,58,0.4); }
+
+#screen-onboarding .skip {
+  color: rgba(245,240,232,0.3);
+  font-size: 14px;
+  margin-top: 20px;
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+
+/* ==================== */
+/* Screen 1: Paipan Input */
+/* ==================== */
+#screen-paipan {
+  background: var(--bg);
+  padding: 54px 0 83px;
+}
+
+.page-header {
+  padding: 20px 24px 0;
+  margin-bottom: 8px;
+}
+
+.page-header h2 {
+  font-family: var(--serif);
+  font-size: 22px;
+  color: var(--ink);
+  font-weight: 700;
+}
+
+.page-header p {
+  color: var(--text3);
+  font-size: 13px;
+  margin-top: 6px;
+}
+
+.form-section {
+  padding: 0 24px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-label {
+  font-size: 14px;
+  color: var(--text2);
+  margin-bottom: 8px;
+  display: block;
+  font-weight: 500;
+}
+
+.form-input {
+  width: 100%;
+  padding: 14px 16px;
+  border: 1px solid rgba(0,0,0,0.08);
+  border-radius: 12px;
+  font-size: 16px;
+  background: var(--surface);
+  color: var(--text);
+  font-family: var(--sans);
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.form-input:focus { border-color: var(--accent); }
+
+.form-hint {
+  font-size: 12px;
+  color: var(--text3);
+  margin-top: 6px;
+}
+
+.shichen-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.shichen-item {
+  padding: 10px 4px;
+  text-align: center;
+  border: 1px solid rgba(0,0,0,0.08);
+  border-radius: 10px;
+  cursor: pointer;
+  background: var(--surface);
+  transition: all 0.2s;
+  font-size: 13px;
+}
+
+.shichen-item.active {
+  border-color: var(--accent);
+  background: rgba(181,69,58,0.06);
+  color: var(--accent);
+}
+
+.shichen-item .time {
+  font-size: 11px;
+  color: var(--text3);
+  margin-top: 2px;
+}
+
+.gender-row {
+  display: flex;
+  gap: 12px;
+}
+
+.gender-btn {
+  flex: 1;
+  padding: 14px;
+  text-align: center;
+  border: 1px solid rgba(0,0,0,0.08);
+  border-radius: 12px;
+  cursor: pointer;
+  background: var(--surface);
+  font-size: 16px;
+  transition: all 0.2s;
+}
+
+.gender-btn.active {
+  border-color: var(--accent);
+  background: rgba(181,69,58,0.06);
+  color: var(--accent);
+}
+
+.city-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.city-chip {
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 13px;
+  background: rgba(0,0,0,0.04);
+  color: var(--text2);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.city-chip.active {
+  background: rgba(181,69,58,0.1);
+  color: var(--accent);
+}
+
+.form-submit {
+  padding: 0 24px;
+  margin-top: 12px;
+}
+
+.form-submit .btn-primary {
+  width: 100%;
+  padding: 16px;
+}
+
+/* ==================== */
+/* Screen 2: Result */
+/* ==================== */
+#screen-result {
+  background: var(--bg);
+  padding: 54px 0 83px;
+}
+
+.result-header {
+  text-align: center;
+  padding: 20px 24px 24px;
+}
+
+.result-header h2 {
+  font-family: var(--serif);
+  font-size: 20px;
+  color: var(--ink);
+}
+
+.pillars {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  padding: 0 24px;
+  margin-bottom: 8px;
+}
+
+.pillar {
+  width: 72px;
+  text-align: center;
+}
+
+.pillar-label {
+  font-size: 12px;
+  color: var(--text3);
+  margin-bottom: 6px;
+}
+
+.pillar-chars {
+  background: var(--surface);
+  border-radius: 12px;
+  padding: 12px 0;
+  border: 1px solid rgba(0,0,0,0.06);
+}
+
+.pillar-stem {
+  font-family: var(--serif);
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.pillar-branch {
+  font-family: var(--serif);
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.pillar-element {
+  font-size: 11px;
+  color: var(--text3);
+  margin-top: 4px;
+}
+
+.pillar.day-master .pillar-chars {
+  border-color: var(--accent);
+  background: rgba(181,69,58,0.04);
+}
+
+.day-info {
+  text-align: center;
+  padding: 16px 24px;
+  color: var(--text2);
+  font-size: 14px;
+}
+
+.day-info span {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+.solar-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  color: var(--wood);
+  background: rgba(74,124,89,0.08);
+  padding: 4px 10px;
+  border-radius: 20px;
+  margin-top: 4px;
+}
+
+/* Five elements chart */
+.five-elements {
+  padding: 0 24px;
+  margin: 20px 0;
+}
+
+.five-elements h3 {
+  font-family: var(--serif);
+  font-size: 15px;
+  color: var(--ink);
+  margin-bottom: 14px;
+}
+
+.element-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  gap: 10px;
+}
+
+.element-name {
+  width: 24px;
+  font-size: 14px;
+  font-weight: 600;
+  text-align: center;
+}
+
+.element-bar-bg {
+  flex: 1;
+  height: 22px;
+  background: rgba(0,0,0,0.04);
+  border-radius: 11px;
+  overflow: hidden;
+}
+
+.element-bar {
+  height: 100%;
+  border-radius: 11px;
+  transition: width 1s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.element-pct {
+  width: 40px;
+  font-size: 13px;
+  color: var(--text2);
+  text-align: right;
+}
+
+.element-missing {
+  font-size: 11px;
+  color: var(--accent);
+  font-weight: 600;
+}
+
+/* Personality section */
+.personality {
+  padding: 0 24px;
+  margin: 24px 0;
+}
+
+.personality h3 {
+  font-family: var(--serif);
+  font-size: 15px;
+  color: var(--ink);
+  margin-bottom: 14px;
+}
+
+.personality-content {
+  border-left: 3px solid var(--accent);
+  padding-left: 16px;
+  font-size: 15px;
+  line-height: 1.9;
+  color: var(--text);
+}
+
+/* Paywall */
+.paywall {
+  margin: 24px;
+  background: var(--surface);
+  border-radius: 16px;
+  padding: 24px;
+  border: 1px solid rgba(181,69,58,0.15);
+  position: relative;
+  overflow: hidden;
+}
+
+.paywall::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+}
+
+.paywall-lock {
+  font-size: 13px;
+  color: var(--accent);
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.paywall h4 {
+  font-family: var(--serif);
+  font-size: 17px;
+  color: var(--ink);
+  margin-bottom: 16px;
+  line-height: 1.5;
+}
+
+.paywall-features {
+  list-style: none;
+  margin-bottom: 20px;
+}
+
+.paywall-features li {
+  font-size: 14px;
+  color: var(--text2);
+  padding: 4px 0;
+}
+
+.paywall-features li::before {
+  content: '· ';
+  color: var(--accent);
+}
+
+.paywall .btn-primary {
+  width: 100%;
+}
+
+.paywall-count {
+  text-align: center;
+  font-size: 12px;
+  color: var(--text3);
+  margin-top: 12px;
+}
+
+/* Bottom actions */
+.bottom-actions {
+  display: flex;
+  gap: 12px;
+  padding: 0 24px;
+  margin-bottom: 24px;
+}
+
+.btn-outline {
+  flex: 1;
+  padding: 12px;
+  border: 1px solid rgba(0,0,0,0.1);
+  border-radius: 50px;
+  background: var(--surface);
+  font-size: 14px;
+  color: var(--text);
+  cursor: pointer;
+  text-align: center;
+  font-family: var(--sans);
+}
+
+/* ==================== */
+/* Screen 3: Report */
+/* ==================== */
+#screen-report {
+  background: var(--bg);
+  padding: 0 0 83px;
+}
+
+.report-cover {
+  background: var(--ink);
+  padding: 80px 24px 48px;
+  text-align: center;
+  position: relative;
+}
+
+.report-cover::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 40px;
+  background: linear-gradient(to bottom, transparent, var(--bg));
+}
+
+.report-cover .divider-line {
+  width: 60%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(245,240,232,0.3), transparent);
+  margin: 0 auto 20px;
+}
+
+.report-cover h1 {
+  font-family: var(--serif);
+  color: var(--bg);
+  font-size: 24px;
+  letter-spacing: 8px;
+  font-weight: 900;
+  margin-bottom: 16px;
+}
+
+.report-cover .day-master-label {
+  color: rgba(245,240,232,0.7);
+  font-size: 15px;
+  letter-spacing: 3px;
+  margin-bottom: 28px;
+}
+
+.stamp {
+  width: 64px;
+  height: 64px;
+  border: 2px solid var(--accent);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 16px;
+  color: var(--accent);
+  font-family: var(--serif);
+  font-size: 12px;
+  font-weight: 700;
+  transform: rotate(-15deg);
+  letter-spacing: 2px;
+  line-height: 1.2;
+  text-align: center;
+}
+
+.report-cover .from {
+  color: rgba(245,240,232,0.4);
+  font-size: 13px;
+  letter-spacing: 2px;
+}
+
+/* Report chapters */
+.chapter {
+  padding: 32px 24px;
+}
+
+.chapter-title {
+  font-family: var(--serif);
+  font-size: 18px;
+  color: var(--ink);
+  font-weight: 700;
+  padding-left: 14px;
+  border-left: 3px solid var(--accent);
+  margin-bottom: 24px;
+}
+
+.chapter p {
+  font-size: 15px;
+  line-height: 2;
+  color: var(--text);
+  margin-bottom: 16px;
+}
+
+.chapter .highlight {
+  color: var(--accent);
+  font-weight: 500;
+}
+
+.chapter .bold {
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.chapter .dim {
+  color: var(--text2);
+  font-size: 14px;
+}
+
+/* Dimension markers */
+.dimension {
+  font-family: var(--serif);
+  font-size: 15px;
+  color: var(--accent);
+  font-weight: 700;
+  margin: 24px 0 12px;
+}
+
+/* Trend chart placeholder */
+.trend-chart {
+  background: var(--surface);
+  border-radius: 16px;
+  padding: 20px;
+  margin: 20px 0;
+  border: 1px solid rgba(0,0,0,0.04);
+}
+
+.trend-chart h4 {
+  font-size: 13px;
+  color: var(--text3);
+  margin-bottom: 16px;
+}
+
+.chart-bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
+  height: 120px;
+}
+
+.chart-bar {
+  flex: 1;
+  background: rgba(181,69,58,0.15);
+  border-radius: 4px 4px 0 0;
+  position: relative;
+  transition: height 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.chart-bar.high { background: var(--accent); }
+.chart-bar.mid { background: rgba(181,69,58,0.4); }
+
+.chart-bar-label {
+  position: absolute;
+  bottom: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 10px;
+  color: var(--text3);
+  white-space: nowrap;
+}
+
+.chart-bar-note {
+  position: absolute;
+  top: -22px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 10px;
+  color: var(--accent);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* Dayun timeline */
+.dayun-timeline {
+  padding: 0 24px;
+  margin: 16px 0 24px;
+}
+
+.dayun-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.dayun-years {
+  font-size: 12px;
+  color: var(--text3);
+  width: 80px;
+  flex-shrink: 0;
+}
+
+.dayun-bar-bg {
+  flex: 1;
+  height: 18px;
+  background: rgba(0,0,0,0.04);
+  border-radius: 9px;
+  overflow: hidden;
+}
+
+.dayun-bar {
+  height: 100%;
+  border-radius: 9px;
+  background: var(--accent);
+}
+
+.dayun-label {
+  font-size: 12px;
+  color: var(--text2);
+  width: 60px;
+  flex-shrink: 0;
+}
+
+.dayun-label.key {
+  color: var(--accent);
+  font-weight: 600;
+}
+
+/* Kaiyun section */
+.kaiyun-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  padding: 0 24px;
+  margin: 16px 0;
+}
+
+.kaiyun-item {
+  background: var(--surface);
+  border-radius: 12px;
+  padding: 16px;
+  text-align: center;
+  border: 1px solid rgba(0,0,0,0.04);
+}
+
+.kaiyun-icon {
+  font-size: 24px;
+  margin-bottom: 6px;
+}
+
+.kaiyun-label {
+  font-size: 12px;
+  color: var(--text3);
+  margin-bottom: 4px;
+}
+
+.kaiyun-value {
+  font-size: 14px;
+  color: var(--text);
+  font-weight: 500;
+}
+
+/* Product recommendation */
+.product-rec {
+  margin: 20px 24px;
+  background: var(--surface);
+  border-radius: 14px;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  border: 1px solid rgba(0,0,0,0.04);
+  cursor: pointer;
+}
+
+.product-img {
+  width: 56px;
+  height: 56px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, var(--wood), #3a5a40);
+  flex-shrink: 0;
+}
+
+.product-info {
+  flex: 1;
+}
+
+.product-info .name {
+  font-size: 14px;
+  color: var(--text);
+  font-weight: 500;
+}
+
+.product-info .desc {
+  font-size: 12px;
+  color: var(--text3);
+  margin-top: 2px;
+}
+
+.product-info .price {
+  font-size: 16px;
+  color: var(--accent);
+  font-weight: 600;
+  margin-top: 4px;
+}
+
+.product-arrow {
+  color: var(--text3);
+  font-size: 18px;
+}
+
+/* Master note */
+.master-note {
+  margin: 32px 24px;
+  background: rgba(45,45,45,0.04);
+  border-radius: 16px;
+  padding: 28px 24px;
+  position: relative;
+}
+
+.master-note::before,
+.master-note::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(0,0,0,0.08), transparent);
+}
+
+.master-note::before { top: 0; }
+.master-note::after { bottom: 0; }
+
+.master-note .label {
+  font-family: var(--serif);
+  font-size: 14px;
+  color: var(--text3);
+  margin-bottom: 14px;
+}
+
+.master-note blockquote {
+  font-family: var(--serif);
+  font-size: 17px;
+  line-height: 1.9;
+  color: var(--ink);
+  font-style: normal;
+}
+
+.master-note .sign {
+  text-align: right;
+  font-size: 14px;
+  color: var(--text3);
+  margin-top: 16px;
+}
+
+/* Upgrade card */
+.upgrade-card {
+  margin: 24px;
+  background: var(--surface);
+  border-radius: 16px;
+  padding: 24px;
+  text-align: center;
+  border: 1px solid rgba(181,69,58,0.1);
+}
+
+.upgrade-card h4 {
+  font-family: var(--serif);
+  font-size: 17px;
+  color: var(--ink);
+  margin-bottom: 8px;
+}
+
+.upgrade-card p {
+  font-size: 13px;
+  color: var(--text3);
+  margin-bottom: 16px;
+}
+
+.upgrade-card .btn-primary { width: 100%; }
+
+/* ==================== */
+/* Screen 4: Master Marketplace */
+/* ============================= */
+#screen-master {
+  background: var(--bg);
+  padding: 54px 0 83px;
+}
+
+.brand-banner {
+  background: var(--surface);
+  margin: 0 16px 16px;
+  border-radius: 14px;
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border: 1px solid rgba(0,0,0,0.04);
+}
+
+.brand-banner .brand-avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #3a3a3a, #2a2a2a);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.brand-banner .brand-avatar svg {
+  width: 22px;
+  height: 22px;
+  opacity: 0.3;
+}
+
+.brand-banner .brand-text h3 {
+  font-family: var(--serif);
+  font-size: 14px;
+  color: var(--ink);
+  font-weight: 700;
+  margin-bottom: 2px;
+}
+
+.brand-banner .brand-text p {
+  font-size: 12px;
+  color: var(--text3);
+}
+
+/* Master card */
+.master-card {
+  background: var(--surface);
+  border-radius: 16px;
+  padding: 18px;
+  margin: 0 16px 12px;
+  border: 1px solid rgba(0,0,0,0.04);
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+
+.master-card:hover { border-color: rgba(181,69,58,0.15); }
+
+.master-card-top {
+  display: flex;
+  gap: 14px;
+  margin-bottom: 10px;
+}
+
+.master-card .mc-avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #4a4a4a, #3a3a3a);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.master-card .mc-avatar svg {
+  width: 26px;
+  height: 26px;
+  opacity: 0.2;
+}
+
+.master-card .mc-info { flex: 1; }
+
+.master-card .mc-name {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 3px;
+}
+
+.master-card .mc-meta {
+  font-size: 13px;
+  color: var(--text3);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 3px;
+}
+
+.status-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.status-dot.online { background: #34C759; }
+.status-dot.busy { background: #FF9500; }
+.status-dot.offline { background: #8E8E93; }
+
+.mc-rating {
+  color: var(--earth);
+  font-size: 13px;
+}
+
+.master-card .mc-spec {
+  font-size: 12px;
+  color: var(--text2);
+  margin-bottom: 2px;
+}
+
+.master-card .mc-title {
+  font-size: 12px;
+  color: var(--text3);
+}
+
+.master-card .mc-sig {
+  font-size: 13px;
+  color: var(--text2);
+  font-style: italic;
+  padding: 8px 0 0;
+  border-top: 1px solid rgba(0,0,0,0.04);
+  line-height: 1.5;
+}
+
+.master-card .mc-action {
+  float: right;
+  font-size: 13px;
+  color: var(--accent);
+  font-weight: 600;
+  margin-top: -20px;
+}
+
+/* Platform note */
+.platform-note {
+  margin: 16px 16px 100px;
+  padding: 16px;
+  background: rgba(0,0,0,0.02);
+  border-radius: 12px;
+  font-size: 12px;
+  color: var(--text3);
+  line-height: 1.8;
+}
+
+/* Videos section */
+.section-title {
+  font-family: var(--serif);
+  font-size: 16px;
+  color: var(--ink);
+  padding: 24px 24px 14px;
+  font-weight: 700;
+}
+
+.video-scroll {
+  display: flex;
+  gap: 12px;
+  padding: 0 24px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+
+.video-scroll::-webkit-scrollbar { display: none; }
+
+.video-card {
+  width: 200px;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+.video-thumb {
+  width: 200px;
+  height: 112px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, #3a3a3a, #2a2a2a);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 8px;
+  position: relative;
+}
+
+.play-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.play-btn::after {
+  content: '';
+  width: 0;
+  height: 0;
+  border-left: 14px solid rgba(255,255,255,0.8);
+  border-top: 8px solid transparent;
+  border-bottom: 8px solid transparent;
+  margin-left: 3px;
+}
+
+.video-duration {
+  position: absolute;
+  bottom: 6px;
+  right: 8px;
+  font-size: 11px;
+  color: rgba(255,255,255,0.8);
+  background: rgba(0,0,0,0.5);
+  padding: 1px 6px;
+  border-radius: 4px;
+}
+
+.video-card .video-title {
+  font-size: 13px;
+  color: var(--text);
+}
+
+/* Story section */
+.story {
+  padding: 0 24px;
+  margin: 8px 0 24px;
+  border-left: 3px solid var(--accent);
+  margin-left: 24px;
+  padding-left: 16px;
+}
+
+.story p {
+  font-size: 15px;
+  line-height: 2;
+  color: var(--text);
+}
+
+/* Ink divider */
+.ink-divider {
+  height: 1px;
+  margin: 8px 40px;
+  background: linear-gradient(90deg, transparent, rgba(0,0,0,0.1), transparent);
+}
+
+/* Service cards */
+.service-cards {
+  padding: 0 24px;
+}
+
+.service-card {
+  background: var(--surface);
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  cursor: pointer;
+  border: 1px solid rgba(0,0,0,0.04);
+  transition: border-color 0.2s;
+}
+
+.service-card:hover { border-color: rgba(181,69,58,0.2); }
+
+.service-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  flex-shrink: 0;
+}
+
+.service-icon.annotation { background: rgba(181,69,58,0.08); }
+.service-icon.consult { background: rgba(44,95,124,0.08); }
+
+.service-info { flex: 1; }
+
+.service-info .name {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 3px;
+}
+
+.service-info .desc {
+  font-size: 13px;
+  color: var(--text3);
+}
+
+.service-price {
+  font-size: 16px;
+  color: var(--accent);
+  font-weight: 600;
+}
+
+/* Testimonials */
+.testimonial {
+  background: var(--surface);
+  border-radius: 12px;
+  padding: 16px;
+  margin: 0 24px 10px;
+  border: 1px solid rgba(0,0,0,0.03);
+}
+
+.testimonial .user {
+  font-size: 13px;
+  color: var(--text3);
+  margin-bottom: 6px;
+}
+
+.testimonial .user .tag {
+  font-size: 11px;
+  background: rgba(0,0,0,0.04);
+  padding: 2px 6px;
+  border-radius: 4px;
+  margin-left: 6px;
+}
+
+.testimonial .content {
+  font-size: 14px;
+  color: var(--text);
+  line-height: 1.6;
+}
+
+/* ==================== */
+/* Screen 5: Fuyuan */
+/* ==================== */
+#screen-fuyuan {
+  background: var(--bg);
+  padding: 54px 0 83px;
+}
+
+.rec-label {
+  padding: 0 24px;
+  font-size: 13px;
+  color: var(--text3);
+  margin-bottom: 14px;
+}
+
+.products-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  padding: 0 24px;
+  margin-bottom: 28px;
+}
+
+.product-card {
+  background: var(--surface);
+  border-radius: 14px;
+  overflow: hidden;
+  cursor: pointer;
+  border: 1px solid rgba(0,0,0,0.04);
+}
+
+.product-card-img {
+  width: 100%;
+  height: 130px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 36px;
+}
+
+.product-card-img.wood-bg { background: linear-gradient(135deg, #4A7C59, #3a5a40); }
+.product-card-img.fire-bg { background: linear-gradient(135deg, #C84B31, #8B3020); }
+.product-card-img.metal-bg { background: linear-gradient(135deg, #8C8C8C, #666); }
+.product-card-img.water-bg { background: linear-gradient(135deg, #2C5F7C, #1a3a4a); }
+
+.product-card-body {
+  padding: 12px;
+}
+
+.product-card-body .name {
+  font-size: 14px;
+  color: var(--text);
+  font-weight: 500;
+  margin-bottom: 2px;
+}
+
+.product-card-body .sub {
+  font-size: 12px;
+  color: var(--text3);
+  margin-bottom: 6px;
+}
+
+.product-card-body .price {
+  font-size: 16px;
+  color: var(--accent);
+  font-weight: 600;
+}
+
+/* Subscription card */
+.sub-card {
+  margin: 0 24px;
+  background: var(--surface);
+  border-radius: 16px;
+  padding: 24px;
+  border: 1px solid rgba(181,69,58,0.1);
+}
+
+.sub-card h3 {
+  font-family: var(--serif);
+  font-size: 17px;
+  color: var(--ink);
+  margin-bottom: 14px;
+}
+
+.sub-features {
+  list-style: none;
+  margin-bottom: 20px;
+}
+
+.sub-features li {
+  font-size: 14px;
+  color: var(--text2);
+  padding: 4px 0;
+}
+
+.sub-features li::before {
+  content: '✓ ';
+  color: var(--wood);
+  font-weight: 600;
+}
+
+.sub-pricing {
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.sub-pricing .current {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--accent);
+}
+
+.sub-pricing .period {
+  font-size: 14px;
+  color: var(--text3);
+}
+
+.sub-pricing .trial {
+  font-size: 13px;
+  color: var(--wood);
+  margin-top: 4px;
+}
+
+.sub-card .btn-primary { width: 100%; }
+
+/* ==================== */
+/* Screen 6: Mine */
+/* ==================== */
+#screen-mine {
+  background: var(--bg);
+  padding: 54px 0 83px;
+}
+
+.profile-card {
+  margin: 20px 24px;
+  background: var(--surface);
+  border-radius: 16px;
+  padding: 24px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.profile-avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent), #8B3020);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 22px;
+  font-weight: 700;
+  font-family: var(--serif);
+}
+
+.profile-info .name {
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.profile-info .tag {
+  font-size: 13px;
+  color: var(--text3);
+  margin-top: 2px;
+}
+
+.menu-group {
+  margin: 0 24px 16px;
+  background: var(--surface);
+  border-radius: 14px;
+  overflow: hidden;
+}
+
+.menu-item {
+  display: flex;
+  align-items: center;
+  padding: 16px 20px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.menu-item:not(:last-child) {
+  border-bottom: 1px solid rgba(0,0,0,0.04);
+}
+
+.menu-item:active { background: rgba(0,0,0,0.02); }
+
+.menu-item .icon {
+  width: 28px;
+  font-size: 18px;
+}
+
+.menu-item .label {
+  flex: 1;
+  font-size: 15px;
+  color: var(--text);
+}
+
+.menu-item .arrow {
+  color: var(--text3);
+  font-size: 14px;
+}
+
+.menu-item .badge {
+  font-size: 12px;
+  color: var(--text3);
+  margin-right: 8px;
+}
+
+/* ==================== */
+/* Nav indicator */
+/* ==================== */
+.nav-bar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 150;
+  padding: 54px 16px 10px;
+  display: flex;
+  align-items: center;
+  background: linear-gradient(to bottom, var(--bg) 60%, transparent);
+}
+
+.nav-bar.dark {
+  background: linear-gradient(to bottom, var(--ink) 60%, transparent);
+}
+
+.nav-back {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 20px;
+  color: var(--text);
+  border-radius: 50%;
+  transition: background 0.2s;
+}
+
+.nav-back:active { background: rgba(0,0,0,0.05); }
+
+.nav-bar.dark .nav-back { color: var(--bg); }
+
+.nav-title {
+  flex: 1;
+  text-align: center;
+  font-family: var(--serif);
+  font-size: 16px;
+  color: var(--text);
+  font-weight: 700;
+}
+
+.nav-bar.dark .nav-title { color: var(--bg); }
+
+.nav-action {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+/* Page label (top-right corner for prototype) */
+.proto-label {
+  position: fixed;
+  top: 12px;
+  right: 12px;
+  background: var(--ink);
+  color: var(--bg);
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  z-index: 9999;
+  opacity: 0.6;
+}
+
+/* Screen navigator (prototype controls) */
+.proto-nav {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 6px;
+  background: var(--ink);
+  padding: 6px 10px;
+  border-radius: 20px;
+  z-index: 9999;
+}
+
+.proto-nav button {
+  padding: 6px 14px;
+  border: none;
+  border-radius: 14px;
+  font-size: 12px;
+  cursor: pointer;
+  background: transparent;
+  color: rgba(245,240,232,0.5);
+  font-family: var(--sans);
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.proto-nav button.active {
+  background: var(--accent);
+  color: #fff;
+}
+
+.proto-nav button:hover {
+  color: var(--bg);
+}
+</style>
+</head>
+<body>
+
+<div class="proto-label">传承八字 · 原型预览</div>
+
+<!-- Prototype screen navigator -->
+<div class="proto-nav">
+  <button class="active" onclick="showScreen('onboarding')">引导</button>
+  <button onclick="showScreen('paipan')">排盘</button>
+  <button onclick="showScreen('result')">结果</button>
+  <button onclick="showScreen('report')">报告</button>
+  <button onclick="showScreen('master')">师傅</button>
+  <button onclick="showScreen('fuyuan')">福缘</button>
+  <button onclick="showScreen('mine')">我的</button>
+</div>
+
+<div class="phone">
+  <div class="phone-inner">
+
+    <!-- ========== Onboarding ========== -->
+    <div class="screen" id="screen-onboarding">
+      <div class="master-photo">
+        <svg viewBox="0 0 24 24" fill="none" stroke="rgba(245,240,232,0.5)" stroke-width="1">
+          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+          <circle cx="12" cy="7" r="4"/>
+        </svg>
+      </div>
+      <h1>看看你的命里藏了什么</h1>
+      <p class="subtitle">XX先生 · 鲁南民间命理传承人</p>
+      <button class="btn-primary" onclick="showScreen('paipan')">开始排盘</button>
+      <button class="skip" onclick="showScreen('paipan')">稍后再说</button>
+    </div>
+
+    <!-- ========== Paipan Input ========== -->
+    <div class="screen hidden" id="screen-paipan">
+      <div class="page-header">
+        <h2>请输入您的出生信息</h2>
+        <p>信息仅用于排盘，不会泄露</p>
+      </div>
+
+      <div class="form-section">
+        <div class="form-group">
+          <label class="form-label">出生日期</label>
+          <input class="form-input" type="text" value="1990 年 6 月 15 日" readonly>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">出生时辰</label>
+          <div class="shichen-grid">
+            <div class="shichen-item">子时<div class="time">23-01</div></div>
+            <div class="shichen-item">丑时<div class="time">01-03</div></div>
+            <div class="shichen-item">寅时<div class="time">03-05</div></div>
+            <div class="shichen-item">卯时<div class="time">05-07</div></div>
+            <div class="shichen-item">辰时<div class="time">07-09</div></div>
+            <div class="shichen-item">巳时<div class="time">09-11</div></div>
+            <div class="shichen-item active">午时<div class="time">11-13</div></div>
+            <div class="shichen-item">未时<div class="time">13-15</div></div>
+            <div class="shichen-item">申时<div class="time">15-17</div></div>
+            <div class="shichen-item">酉时<div class="time">17-19</div></div>
+            <div class="shichen-item">戌时<div class="time">19-21</div></div>
+            <div class="shichen-item">亥时<div class="time">21-23</div></div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">出生城市</label>
+          <input class="form-input" type="text" placeholder="搜索城市..." value="成都">
+          <p class="form-hint">用于真太阳时校正，提高排盘准确度</p>
+          <div class="city-chips">
+            <span class="city-chip">北京</span>
+            <span class="city-chip">上海</span>
+            <span class="city-chip">广州</span>
+            <span class="city-chip active">成都</span>
+            <span class="city-chip">杭州</span>
+            <span class="city-chip">武汉</span>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">性别</label>
+          <div class="gender-row">
+            <div class="gender-btn active">男（乾造）</div>
+            <div class="gender-btn">女（坤造）</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-submit">
+        <button class="btn-primary" onclick="showScreen('result')">排 盘</button>
+      </div>
+
+      <!-- Tab Bar -->
+      <div class="tab-bar">
+        <div class="tab active"><span class="tab-icon">◎</span><span>我的盘</span></div>
+        <div class="tab" onclick="showScreen('master')"><span class="tab-icon">◈</span><span>师傅</span></div>
+        <div class="tab" onclick="showScreen('fuyuan')"><span class="tab-icon">◇</span><span>福缘</span></div>
+        <div class="tab" onclick="showScreen('mine')"><span class="tab-icon">○</span><span>我的</span></div>
+      </div>
+    </div>
+
+    <!-- ========== Result ========== -->
+    <div class="screen hidden" id="screen-result">
+      <div class="nav-bar">
+        <div class="nav-back" onclick="showScreen('paipan')">←</div>
+        <div class="nav-title">排盘结果</div>
+        <div class="nav-action"></div>
+      </div>
+
+      <div class="result-header" style="margin-top: 40px;">
+        <h2>你的八字</h2>
+      </div>
+
+      <div class="pillars">
+        <div class="pillar">
+          <div class="pillar-label">年柱</div>
+          <div class="pillar-chars">
+            <div class="pillar-stem" style="color: var(--metal)">庚</div>
+            <div class="pillar-branch" style="color: var(--fire)">午</div>
+          </div>
+          <div class="pillar-element">金 · 火</div>
+        </div>
+        <div class="pillar">
+          <div class="pillar-label">月柱</div>
+          <div class="pillar-chars">
+            <div class="pillar-stem" style="color: var(--water)">壬</div>
+            <div class="pillar-branch" style="color: var(--fire)">午</div>
+          </div>
+          <div class="pillar-element">水 · 火</div>
+        </div>
+        <div class="pillar day-master">
+          <div class="pillar-label">日柱</div>
+          <div class="pillar-chars">
+            <div class="pillar-stem" style="color: var(--wood)">甲</div>
+            <div class="pillar-branch" style="color: var(--fire)">午</div>
+          </div>
+          <div class="pillar-element">木 · 火</div>
+        </div>
+        <div class="pillar">
+          <div class="pillar-label">时柱</div>
+          <div class="pillar-chars">
+            <div class="pillar-stem" style="color: var(--fire)">丙</div>
+            <div class="pillar-branch" style="color: var(--wood)">寅</div>
+          </div>
+          <div class="pillar-element">火 · 木</div>
+        </div>
+      </div>
+
+      <div class="day-info">
+        日主：<span>甲木</span> · 偏旺
+        <br>
+        <span class="solar-badge">✓ 真太阳时已校正（-32分钟）</span>
+      </div>
+
+      <div class="five-elements">
+        <h3>五行分布</h3>
+        <div class="element-row">
+          <span class="element-name" style="color: var(--wood)">木</span>
+          <div class="element-bar-bg"><div class="element-bar" style="width: 30%; background: var(--wood)"></div></div>
+          <span class="element-pct">30%</span>
+        </div>
+        <div class="element-row">
+          <span class="element-name" style="color: var(--fire)">火</span>
+          <div class="element-bar-bg"><div class="element-bar" style="width: 50%; background: var(--fire)"></div></div>
+          <span class="element-pct">50%</span>
+        </div>
+        <div class="element-row">
+          <span class="element-name" style="color: var(--earth)">土</span>
+          <div class="element-bar-bg"><div class="element-bar" style="width: 0%"></div></div>
+          <span class="element-pct element-missing">缺</span>
+        </div>
+        <div class="element-row">
+          <span class="element-name" style="color: var(--metal)">金</span>
+          <div class="element-bar-bg"><div class="element-bar" style="width: 10%; background: var(--metal)"></div></div>
+          <span class="element-pct">10%</span>
+        </div>
+        <div class="element-row">
+          <span class="element-name" style="color: var(--water)">水</span>
+          <div class="element-bar-bg"><div class="element-bar" style="width: 10%; background: var(--water)"></div></div>
+          <span class="element-pct">10%</span>
+        </div>
+      </div>
+
+      <div class="personality">
+        <h3>性格概述</h3>
+        <div class="personality-content">
+          甲木生在午月，满盘火旺。<br>
+          脑子转得快，做事果断，但耐心差。<br>
+          心里藏不住事，有什么说什么。<br>
+          对朋友真诚，但容易在感情里上头。<br>
+          你不是没能力，是太着急。
+        </div>
+      </div>
+
+      <div class="paywall">
+        <div class="paywall-lock">🔒 完整解读</div>
+        <h4>您的命盘有一个少见的格局：<br>「木火通明」</h4>
+        <ul class="paywall-features">
+          <li>2026年详细运势（事业/财运/感情/健康）</li>
+          <li>未来10年大运走势</li>
+          <li>个性化开运建议</li>
+          <li>AI寄语</li>
+        </ul>
+        <button class="btn-primary" onclick="showScreen('report')">查看完整报告  ¥9.9</button>
+        <p class="paywall-count">已有 12,847 人查看了自己的报告</p>
+      </div>
+
+      <div class="bottom-actions">
+        <button class="btn-outline">分享卡片</button>
+        <button class="btn-outline">保存盘面</button>
+      </div>
+
+      <!-- Tab Bar -->
+      <div class="tab-bar">
+        <div class="tab active"><span class="tab-icon">◎</span><span>我的盘</span></div>
+        <div class="tab" onclick="showScreen('master')"><span class="tab-icon">◈</span><span>师傅</span></div>
+        <div class="tab" onclick="showScreen('fuyuan')"><span class="tab-icon">◇</span><span>福缘</span></div>
+        <div class="tab" onclick="showScreen('mine')"><span class="tab-icon">○</span><span>我的</span></div>
+      </div>
+    </div>
+
+    <!-- ========== Report ========== -->
+    <div class="screen hidden" id="screen-report">
+      <div class="nav-bar dark">
+        <div class="nav-back" onclick="showScreen('result')">←</div>
+        <div class="nav-title">命理报告</div>
+        <div class="nav-action" style="color: var(--bg); font-size: 14px;">↗</div>
+      </div>
+
+      <div class="report-cover">
+        <div class="divider-line"></div>
+        <h1>你的命理报告</h1>
+        <p class="day-master-label">甲木日主 · 木火通明</p>
+        <div class="stamp">传承<br>八字</div>
+        <p class="from">XX先生门下 · 传承解读</p>
+        <div class="divider-line" style="margin-top: 20px;"></div>
+      </div>
+
+      <div class="chapter">
+        <div class="chapter-title">第一章 · 你是谁</div>
+        <p>甲木日主，午月生人，火旺木焦。说白了——你是一棵长在烈日下的大树。根扎得深，枝叶旺，但太阳太毒，容易上火。</p>
+        <p>先说过去，验一下盘。</p>
+        <p>你在<span class="highlight">2017年</span>前后经历过一次重要选择，可能是换工作、搬城市、或者一段关系的结束。那一年丁酉，酉金冲你的日支，动荡是注定的。<span class="bold">如果你当时选了变，恭喜你，选对了。</span></p>
+        <p>你这个人，优点和缺点是同一个东西：<span class="bold">快</span>。做决定快，行动快，翻脸也快。适合做需要爆发力的事，不适合需要慢慢熬的事。</p>
+        <p>你的盘里木火两旺，金水两弱。翻译过来就是：感性有余，理性不足。直觉很准，但容易冲动。你的大部分麻烦，都是在"太快"上面吃的亏。</p>
+      </div>
+
+      <div class="chapter">
+        <div class="chapter-title">第二章 · 2026年运势</div>
+
+        <div class="trend-chart">
+          <h4>2026年月度运势走向</h4>
+          <div class="chart-bars">
+            <div class="chart-bar mid" style="height:55%"><span class="chart-bar-label">1月</span></div>
+            <div class="chart-bar mid" style="height:50%"><span class="chart-bar-label">2月</span></div>
+            <div class="chart-bar mid" style="height:60%"><span class="chart-bar-label">3月</span></div>
+            <div class="chart-bar" style="height:45%"><span class="chart-bar-label">4月</span></div>
+            <div class="chart-bar mid" style="height:55%"><span class="chart-bar-label">5月</span></div>
+            <div class="chart-bar" style="height:40%"><span class="chart-bar-label">6月</span></div>
+            <div class="chart-bar high" style="height:85%"><span class="chart-bar-label">7月</span><span class="chart-bar-note">← 转折</span></div>
+            <div class="chart-bar high" style="height:90%"><span class="chart-bar-label">8月</span></div>
+            <div class="chart-bar mid" style="height:70%"><span class="chart-bar-label">9月</span></div>
+            <div class="chart-bar mid" style="height:65%"><span class="chart-bar-label">10月</span></div>
+            <div class="chart-bar high" style="height:75%"><span class="chart-bar-label">11月</span></div>
+            <div class="chart-bar mid" style="height:60%"><span class="chart-bar-label">12月</span><span class="chart-bar-note">意外收入</span></div>
+          </div>
+        </div>
+
+        <p class="dimension">▸ 事业</p>
+        <p>上半年稳，下半年有变动。具体看农历七月（公历8月），会有一个选择摆在你面前。这次别急，<span class="bold">想三天再决定</span>。你的盘里伤官旺，容易跟领导硬碰硬，今年忍一忍。</p>
+
+        <p class="dimension">▸ 财运</p>
+        <p>正财平稳，<span class="highlight">偏财别碰</span>。你的盘不适合投机，适合靠本事赚。年底有一笔意外收入的可能，但不是天上掉的，是之前种下的因。</p>
+
+        <p class="dimension">▸ 感情</p>
+        <p>单身的：桃花在秋天，主动不如被动。有对象的：上半年容易吵，忍过去了下半年反而更好。<span class="dim">你们吵不是不爱，是你太急，对方太慢。</span></p>
+
+        <p class="dimension">▸ 健康</p>
+        <p>火旺伤金，注意呼吸系统和皮肤。<span class="bold">少熬夜，你的身体扛不住你的脑子。</span>夏天少吃辛辣，多喝水。</p>
+      </div>
+
+      <div class="chapter">
+        <div class="chapter-title">第三章 · 未来十年大运</div>
+        <p>你目前走的是<span class="bold">壬戌大运</span>（2020-2030），水土交战，主动荡中求稳。前半段（2020-2025）是摸索期，后半段（2026-2030）开始收。</p>
+      </div>
+
+      <div class="dayun-timeline">
+        <div class="dayun-item">
+          <span class="dayun-years">2020-2023</span>
+          <div class="dayun-bar-bg"><div class="dayun-bar" style="width:40%; opacity:0.5"></div></div>
+          <span class="dayun-label">蓄力期</span>
+        </div>
+        <div class="dayun-item">
+          <span class="dayun-years">2024-2026</span>
+          <div class="dayun-bar-bg"><div class="dayun-bar" style="width:55%; opacity:0.7"></div></div>
+          <span class="dayun-label">过渡期</span>
+        </div>
+        <div class="dayun-item">
+          <span class="dayun-years" style="color: var(--accent); font-weight:600">2027-2029</span>
+          <div class="dayun-bar-bg"><div class="dayun-bar" style="width:90%"></div></div>
+          <span class="dayun-label key">← 爆发期</span>
+        </div>
+        <div class="dayun-item">
+          <span class="dayun-years">2030-2033</span>
+          <div class="dayun-bar-bg"><div class="dayun-bar" style="width:65%; opacity:0.6"></div></div>
+          <span class="dayun-label">收获转平</span>
+        </div>
+      </div>
+
+      <div class="chapter" style="padding-top: 0;">
+        <p><span class="highlight">2027年是你未来十年最重要的一年。</span>提前做好准备，到时候才接得住。具体怎么准备？2026年少折腾，攒资源。</p>
+      </div>
+
+      <div class="chapter">
+        <div class="chapter-title">第四章 · 开运建议</div>
+      </div>
+
+      <div class="kaiyun-grid">
+        <div class="kaiyun-item">
+          <div class="kaiyun-icon">🧭</div>
+          <div class="kaiyun-label">有利方位</div>
+          <div class="kaiyun-value">东方 · 东南方</div>
+        </div>
+        <div class="kaiyun-item">
+          <div class="kaiyun-icon">🎨</div>
+          <div class="kaiyun-label">有利颜色</div>
+          <div class="kaiyun-value">绿色系 · 深蓝</div>
+        </div>
+        <div class="kaiyun-item">
+          <div class="kaiyun-icon">🔢</div>
+          <div class="kaiyun-label">有利数字</div>
+          <div class="kaiyun-value">3 · 8</div>
+        </div>
+        <div class="kaiyun-item">
+          <div class="kaiyun-icon">🌿</div>
+          <div class="kaiyun-label">建议佩戴</div>
+          <div class="kaiyun-value">木属性材质</div>
+        </div>
+      </div>
+
+      <div class="product-rec">
+        <div class="product-img"></div>
+        <div class="product-info">
+          <p class="name">五行补木 · 小叶紫檀手串</p>
+          <p class="desc">根据您的五行缺失定制</p>
+          <p class="price">¥199</p>
+        </div>
+        <span class="product-arrow">›</span>
+      </div>
+
+      <div class="master-note">
+        <p class="label">▎AI寄语</p>
+        <blockquote>
+          「此盘木火通明，是个聪明盘。<br>
+          聪明人最容易犯的错就是想太多做太少。<br>
+          2026年的功课就一个字：等。」
+        </blockquote>
+        <p class="sign">— XX先生门下</p>
+      </div>
+
+      <div class="upgrade-card">
+        <h4>想让真师傅亲自看看你的盘？</h4>
+        <p>当前3位师傅在线 · 24小时内送达 · ¥99起</p>
+        <button class="btn-primary">选师傅批注</button>
+      </div>
+
+      <div class="bottom-actions" style="margin-bottom: 100px;">
+        <button class="btn-outline">分享报告</button>
+        <button class="btn-outline">保存PDF</button>
+      </div>
+    </div>
+
+    <!-- ========== Master Marketplace ========== -->
+    <div class="screen hidden" id="screen-master">
+      <div class="page-header">
+        <h2>师傅</h2>
+      </div>
+
+      <div class="brand-banner">
+        <div class="brand-avatar">
+          <svg viewBox="0 0 24 24" fill="none" stroke="rgba(245,240,232,0.5)" stroke-width="1">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+            <circle cx="12" cy="7" r="4"/>
+          </svg>
+        </div>
+        <div class="brand-text">
+          <h3>传承八字 · 严选师傅</h3>
+          <p>每位师傅均经平台考核认证</p>
+        </div>
+      </div>
+
+      <h3 class="section-title">在线师傅</h3>
+
+      <!-- Master 1: Online -->
+      <div class="master-card">
+        <div class="master-card-top">
+          <div class="mc-avatar">
+            <svg viewBox="0 0 24 24" fill="none" stroke="rgba(245,240,232,0.5)" stroke-width="1">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+            </svg>
+          </div>
+          <div class="mc-info">
+            <p class="mc-name">张师傅</p>
+            <p class="mc-meta"><span class="status-dot online"></span> 在线 &nbsp; <span class="mc-rating">⭐ 4.9（127单）</span></p>
+            <p class="mc-spec">擅长：事业 / 财运 / 感情</p>
+            <p class="mc-title">从业18年 · 山东</p>
+          </div>
+        </div>
+        <p class="mc-sig">「看盘要看整体，不能只看一柱。八字是地图，不是判决书。」</p>
+        <span class="mc-action">问事 →</span>
+      </div>
+
+      <!-- Master 2: Busy -->
+      <div class="master-card">
+        <div class="master-card-top">
+          <div class="mc-avatar">
+            <svg viewBox="0 0 24 24" fill="none" stroke="rgba(245,240,232,0.5)" stroke-width="1">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+            </svg>
+          </div>
+          <div class="mc-info">
+            <p class="mc-name">李师傅</p>
+            <p class="mc-meta"><span class="status-dot busy"></span> 忙碌(排队3人) &nbsp; <span class="mc-rating">⭐ 4.8（89单）</span></p>
+            <p class="mc-spec">擅长：感情 / 姻缘 / 健康</p>
+            <p class="mc-title">从业25年 · 河北</p>
+          </div>
+        </div>
+        <p class="mc-sig">「命是底子，运是机会。」</p>
+        <span class="mc-action">排队 →</span>
+      </div>
+
+      <!-- Master 3: Offline -->
+      <div class="master-card">
+        <div class="master-card-top">
+          <div class="mc-avatar">
+            <svg viewBox="0 0 24 24" fill="none" stroke="rgba(245,240,232,0.5)" stroke-width="1">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+            </svg>
+          </div>
+          <div class="mc-info">
+            <p class="mc-name">王师傅</p>
+            <p class="mc-meta"><span class="status-dot offline"></span> 离线 &nbsp; <span class="mc-rating">⭐ 4.7（56单）</span></p>
+            <p class="mc-spec">擅长：事业 / 投资决策</p>
+            <p class="mc-title">从业12年 · 四川</p>
+          </div>
+        </div>
+        <p class="mc-sig">「不算命，只帮你理清思路。」</p>
+        <span class="mc-action">预约 →</span>
+      </div>
+
+      <div class="platform-note">
+        · AI报告由平台AI生成（标注"AI生成"）<br>
+        · 师傅批注/问事由真人师傅亲自完成<br>
+        · 所有师傅经过平台考核认证<br>
+        · 服务不满意可申请退款
+      </div>
+
+      <!-- Tab Bar -->
+      <div class="tab-bar">
+        <div class="tab" onclick="showScreen('result')"><span class="tab-icon">◎</span><span>我的盘</span></div>
+        <div class="tab active"><span class="tab-icon">◈</span><span>师傅</span></div>
+        <div class="tab" onclick="showScreen('fuyuan')"><span class="tab-icon">◇</span><span>福缘</span></div>
+        <div class="tab" onclick="showScreen('mine')"><span class="tab-icon">○</span><span>我的</span></div>
+      </div>
+    </div>
+
+    <!-- ========== Fuyuan ========== -->
+    <div class="screen hidden" id="screen-fuyuan">
+      <div class="page-header">
+        <h2>福缘</h2>
+      </div>
+
+      <p class="rec-label">根据您的八字（甲木日主 · 缺土）推荐</p>
+
+      <div class="products-grid">
+        <div class="product-card">
+          <div class="product-card-img wood-bg">📿</div>
+          <div class="product-card-body">
+            <p class="name">小叶紫檀手串</p>
+            <p class="sub">五行补木 · 手工制作</p>
+            <p class="price">¥199</p>
+          </div>
+        </div>
+        <div class="product-card">
+          <div class="product-card-img fire-bg">🧧</div>
+          <div class="product-card-body">
+            <p class="name">五行红绳</p>
+            <p class="sub">转运开运 · 手工编制</p>
+            <p class="price">¥99</p>
+          </div>
+        </div>
+        <div class="product-card">
+          <div class="product-card-img metal-bg">🪨</div>
+          <div class="product-card-body">
+            <p class="name">水晶摆件</p>
+            <p class="sub">办公室风水 · 补金</p>
+            <p class="price">¥399</p>
+          </div>
+        </div>
+        <div class="product-card">
+          <div class="product-card-img water-bg">🏺</div>
+          <div class="product-card-body">
+            <p class="name">黑曜石吊坠</p>
+            <p class="sub">辟邪转运 · 补水</p>
+            <p class="price">¥259</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="sub-card">
+        <h3>月度运势 · 不错过每个关键节点</h3>
+        <ul class="sub-features">
+          <li>每月1号运势总览</li>
+          <li>每周一本周提醒</li>
+          <li>冲合日实时推送</li>
+          <li>季度深度分析</li>
+        </ul>
+        <div class="sub-pricing">
+          <span class="current">¥9.9</span>
+          <span class="period"> /月</span>
+          <p class="trial">首月 ¥1 体验</p>
+        </div>
+        <button class="btn-primary">开通月度运势</button>
+      </div>
+
+      <div style="height: 100px;"></div>
+
+      <!-- Tab Bar -->
+      <div class="tab-bar">
+        <div class="tab" onclick="showScreen('result')"><span class="tab-icon">◎</span><span>我的盘</span></div>
+        <div class="tab" onclick="showScreen('master')"><span class="tab-icon">◈</span><span>师傅</span></div>
+        <div class="tab active"><span class="tab-icon">◇</span><span>福缘</span></div>
+        <div class="tab" onclick="showScreen('mine')"><span class="tab-icon">○</span><span>我的</span></div>
+      </div>
+    </div>
+
+    <!-- ========== Mine ========== -->
+    <div class="screen hidden" id="screen-mine">
+      <div class="page-header">
+        <h2>我的</h2>
+      </div>
+
+      <div class="profile-card">
+        <div class="profile-avatar">L</div>
+        <div class="profile-info">
+          <p class="name">Leslie</p>
+          <p class="tag">甲木日主 · 木火通明</p>
+        </div>
+      </div>
+
+      <div class="menu-group">
+        <div class="menu-item" onclick="showScreen('result')">
+          <span class="icon">◎</span>
+          <span class="label">我的盘面</span>
+          <span class="badge">1</span>
+          <span class="arrow">›</span>
+        </div>
+        <div class="menu-item" onclick="showScreen('report')">
+          <span class="icon">📄</span>
+          <span class="label">我的报告</span>
+          <span class="badge">1</span>
+          <span class="arrow">›</span>
+        </div>
+        <div class="menu-item">
+          <span class="icon">📝</span>
+          <span class="label">师傅批注</span>
+          <span class="badge" style="color: var(--text3)">即将上线</span>
+          <span class="arrow">›</span>
+        </div>
+        <div class="menu-item">
+          <span class="icon">🎙</span>
+          <span class="label">问事记录</span>
+          <span class="badge" style="color: var(--text3)">即将上线</span>
+          <span class="arrow">›</span>
+        </div>
+        <div class="menu-item">
+          <span class="icon">📦</span>
+          <span class="label">我的订单</span>
+          <span class="arrow">›</span>
+        </div>
+        <div class="menu-item">
+          <span class="icon">📅</span>
+          <span class="label">月度运势</span>
+          <span class="badge" style="color: var(--text3)">即将上线</span>
+          <span class="arrow">›</span>
+        </div>
+      </div>
+
+      <div class="menu-group">
+        <div class="menu-item">
+          <span class="icon">🎁</span>
+          <span class="label">邀请好友</span>
+          <span class="arrow">›</span>
+        </div>
+        <div class="menu-item">
+          <span class="icon">💬</span>
+          <span class="label">意见反馈</span>
+          <span class="arrow">›</span>
+        </div>
+        <div class="menu-item">
+          <span class="icon">ℹ️</span>
+          <span class="label">关于我们</span>
+          <span class="arrow">›</span>
+        </div>
+      </div>
+
+      <div style="height: 100px;"></div>
+
+      <!-- Tab Bar -->
+      <div class="tab-bar">
+        <div class="tab" onclick="showScreen('result')"><span class="tab-icon">◎</span><span>我的盘</span></div>
+        <div class="tab" onclick="showScreen('master')"><span class="tab-icon">◈</span><span>师傅</span></div>
+        <div class="tab" onclick="showScreen('fuyuan')"><span class="tab-icon">◇</span><span>福缘</span></div>
+        <div class="tab active"><span class="tab-icon">○</span><span>我的</span></div>
+      </div>
+    </div>
+
+  </div><!-- phone-inner -->
+</div><!-- phone -->
+
+<script>
+const screens = ['onboarding','paipan','result','report','master','fuyuan','mine'];
+
+function showScreen(name) {
+  screens.forEach(s => {
+    const el = document.getElementById('screen-' + s);
+    if (s === name) {
+      el.className = 'screen';
+      el.scrollTop = 0;
+    } else {
+      el.className = 'screen hidden';
+    }
+  });
+
+  // Update proto nav buttons
+  document.querySelectorAll('.proto-nav button').forEach(btn => {
+    btn.classList.remove('active');
+  });
+  const btns = document.querySelectorAll('.proto-nav button');
+  const idx = screens.indexOf(name);
+  if (idx >= 0 && btns[idx]) btns[idx].classList.add('active');
+}
+
+// Interactive elements
+document.querySelectorAll('.shichen-item').forEach(item => {
+  item.addEventListener('click', function() {
+    document.querySelectorAll('.shichen-item').forEach(i => i.classList.remove('active'));
+    this.classList.add('active');
+  });
+});
+
+document.querySelectorAll('.gender-btn').forEach(btn => {
+  btn.addEventListener('click', function() {
+    document.querySelectorAll('.gender-btn').forEach(b => b.classList.remove('active'));
+    this.classList.add('active');
+  });
+});
+
+document.querySelectorAll('.city-chip').forEach(chip => {
+  chip.addEventListener('click', function() {
+    document.querySelectorAll('.city-chip').forEach(c => c.classList.remove('active'));
+    this.classList.add('active');
+    document.querySelector('.form-input[value]').value = this.textContent;
+  });
+});
+</script>
+
+</body>
+</html>
