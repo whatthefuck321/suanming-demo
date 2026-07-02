@@ -273,6 +273,24 @@ body {
   margin-top: 6px;
 }
 
+.case-strip {
+  margin: 0 24px 16px;
+  padding: 12px 14px;
+  background: rgba(255,253,247,0.76);
+  border: 1px solid rgba(0,0,0,0.05);
+  border-radius: 14px;
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--text2);
+}
+
+.case-strip strong {
+  display: block;
+  color: var(--ink);
+  font-size: 14px;
+  margin-bottom: 2px;
+}
+
 .shichen-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -619,6 +637,64 @@ body {
   font-size: 13px;
   line-height: 1.7;
   color: var(--text2);
+}
+
+.handoff-summary {
+  margin: 0 16px 16px;
+  background: var(--surface);
+  border-radius: 14px;
+  border: 1px solid rgba(181,69,58,0.12);
+  padding: 14px;
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--text2);
+}
+
+.handoff-summary strong {
+  display: block;
+  color: var(--ink);
+  margin-bottom: 4px;
+  font-size: 14px;
+}
+
+.consult-panel {
+  margin: 16px;
+  background: #2D2D2D;
+  color: var(--bg);
+  border-radius: 16px;
+  padding: 16px;
+}
+
+.consult-panel.hidden { display: none; }
+
+.consult-panel h4 {
+  font-family: var(--serif);
+  font-size: 16px;
+  margin-bottom: 6px;
+}
+
+.consult-panel p {
+  font-size: 13px;
+  line-height: 1.7;
+  color: rgba(245,240,232,0.78);
+  margin-bottom: 12px;
+}
+
+.service-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.service-btn {
+  border: 1px solid rgba(245,240,232,0.18);
+  background: rgba(245,240,232,0.08);
+  color: var(--bg);
+  border-radius: 12px;
+  padding: 10px 8px;
+  font-family: var(--sans);
+  font-size: 13px;
+  cursor: pointer;
 }
 
 /* Paywall */
@@ -1739,7 +1815,7 @@ body {
       <div class="form-section">
         <div class="form-group">
           <label class="form-label">想问的事</label>
-          <input class="form-input" type="text" placeholder="可不填。比如：要不要换工作？">
+          <input class="form-input" id="question-input" type="text" placeholder="可不填。比如：要不要换工作？">
           <p class="form-hint">填了之后，初判会重点看这一块</p>
           <div class="question-chips">
             <button class="question-chip">事业方向</button>
@@ -1751,7 +1827,7 @@ body {
 
         <div class="form-group">
           <label class="form-label">出生日期</label>
-          <input class="form-input" type="text" value="1990 年 6 月 15 日" readonly>
+          <input class="form-input" id="birth-input" type="text" value="1990 年 6 月 15 日">
         </div>
 
         <div class="form-group">
@@ -1774,7 +1850,7 @@ body {
 
         <div class="form-group">
           <label class="form-label">出生城市</label>
-          <input class="form-input" type="text" placeholder="搜索城市..." value="成都">
+          <input class="form-input" id="city-input" type="text" placeholder="搜索城市..." value="成都">
           <p class="form-hint">用于真太阳时校正，提高排盘准确度</p>
           <div class="city-chips">
             <span class="city-chip">北京</span>
@@ -1796,7 +1872,7 @@ body {
       </div>
 
       <div class="form-submit">
-        <button class="btn-primary" onclick="showScreen('result')">排 盘</button>
+        <button class="btn-primary" onclick="submitPaipan()">排 盘</button>
       </div>
 
       <!-- Tab Bar -->
@@ -1818,6 +1894,11 @@ body {
 
       <div class="result-header" style="margin-top: 40px;">
         <h2>你的八字</h2>
+      </div>
+
+      <div class="case-strip" id="case-strip">
+        <strong>本次问事</strong>
+        还没有提交问题。先回到排盘页填写出生信息和想问的事。
       </div>
 
       <div class="pillars">
@@ -1892,7 +1973,7 @@ body {
 
       <div class="personality">
         <h3>性格概述</h3>
-        <div class="personality-content">
+        <div class="personality-content" id="personality-content">
           甲木生在午月，满盘火旺。<br>
           脑子转得快，遇事先动，随后才细想。<br>
           人情上讲义气，碰到拖拉的人会烦。<br>
@@ -1905,29 +1986,7 @@ body {
         <h3>先验几句</h3>
         <p class="verification-intro">先看这些点落不落在你身上。准的留下，不准的降权，师傅接手时会一起看。</p>
 
-        <div class="verify-item">
-          <p>你做事反应快，别人拖太久，你嘴上可能不催，心里已经开始烦。</p>
-          <span class="verify-source">依据：甲木日主 · 午月火旺</span>
-          <div class="verify-actions">
-            <button>准</button><button>不准</button><button>补充</button>
-          </div>
-        </div>
-
-        <div class="verify-item">
-          <p>这两年你对“要不要换一个方向”这件事，想过不止一次。</p>
-          <span class="verify-source">依据：当前大运与流年触发</span>
-          <div class="verify-actions">
-            <button>准</button><button>不准</button><button>补充</button>
-          </div>
-        </div>
-
-        <div class="verify-item">
-          <p>你对关系很看态度，一句话没接好，后面就会慢慢扣分。</p>
-          <span class="verify-source">依据：火旺木急 · 金水偏弱</span>
-          <div class="verify-actions">
-            <button>准</button><button>不准</button><button>补充</button>
-          </div>
-        </div>
+        <div id="verify-list"></div>
 
         <div class="verify-summary" id="verify-summary">已记录 0 条反馈。先点几条，再带着反馈找师傅。</div>
       </div>
@@ -1952,8 +2011,8 @@ body {
       </div>
 
       <div class="bottom-actions">
-        <button class="btn-outline">分享卡片</button>
-        <button class="btn-outline">保存盘面</button>
+        <button class="btn-outline" onclick="shareCase()">分享卡片</button>
+        <button class="btn-outline" onclick="saveState(true)">保存盘面</button>
       </div>
 
       <!-- Tab Bar -->
@@ -2139,10 +2198,15 @@ body {
         已带入初验反馈：准 0 条，不准 0 条。你在结果页点过的反馈，会先给师傅看。
       </div>
 
+      <div class="handoff-summary" id="master-handoff">
+        <strong>交接单</strong>
+        还没有排盘记录。先排盘，再带着问题和初验反馈找师傅。
+      </div>
+
       <h3 class="section-title">在线师傅</h3>
 
       <!-- Master 1: Online -->
-      <div class="master-card">
+      <div class="master-card" onclick="selectMaster('张师傅','在线','文字问事 ¥39 起')">
         <div class="master-card-top">
           <div class="mc-avatar">
             <svg viewBox="0 0 24 24" fill="none" stroke="rgba(245,240,232,0.5)" stroke-width="1">
@@ -2161,7 +2225,7 @@ body {
       </div>
 
       <!-- Master 2: Busy -->
-      <div class="master-card">
+      <div class="master-card" onclick="selectMaster('李师傅','排队3人','排队复核 ¥29 起')">
         <div class="master-card-top">
           <div class="mc-avatar">
             <svg viewBox="0 0 24 24" fill="none" stroke="rgba(245,240,232,0.5)" stroke-width="1">
@@ -2180,7 +2244,7 @@ body {
       </div>
 
       <!-- Master 3: Offline -->
-      <div class="master-card">
+      <div class="master-card" onclick="selectMaster('王师傅','可预约','预约批注 ¥69 起')">
         <div class="master-card-top">
           <div class="mc-avatar">
             <svg viewBox="0 0 24 24" fill="none" stroke="rgba(245,240,232,0.5)" stroke-width="1">
@@ -2196,6 +2260,15 @@ body {
         </div>
         <p class="mc-sig">「不算命，只帮你理清思路。」</p>
         <span class="mc-action">预约 →</span>
+      </div>
+
+      <div class="consult-panel hidden" id="consult-panel">
+        <h4 id="consult-title">已选择师傅</h4>
+        <p id="consult-desc">交接单会带上命盘、想问的事、初验反馈。这里先做前端闭环，真实下单需要接支付和师傅后台。</p>
+        <div class="service-row">
+          <button class="service-btn" onclick="startConsult('文字问事')">文字问事</button>
+          <button class="service-btn" onclick="startConsult('视频预约')">视频预约</button>
+        </div>
       </div>
 
       <div class="platform-note">
@@ -2370,6 +2443,86 @@ body {
 
 <script>
 const screens = ['onboarding','paipan','result','report','master','fuyuan','mine'];
+const storageKey = 'suanmingDemoCase.v1';
+const verifyState = new Map();
+const appState = {
+  case: null,
+  reading: null,
+  selectedMaster: null
+};
+
+const topicReadings = {
+  '事业方向': {
+    focus: '这次重点看事业方向',
+    personality: [
+      '你起步前会先看准，一旦想清楚，动作会很快。',
+      '卡住你的地方，多半落在赛道选择和下一步位置。',
+      '火旺的人容易先顶住压力，后面才发现自己已经累了。',
+      '这盘适合把目标拆短，不适合长时间靠硬扛。'
+    ],
+    verify: [
+      ['你这段时间对现在的工作节奏有不耐烦，心里想过换打法。', '依据：火旺木急 · 事业宫受触发'],
+      ['你适合自己推动事，不太适合一直等别人拍板。', '依据：甲木日主 · 食伤透出'],
+      ['如果最近要做选择，先看资源和人能不能跟上，不要只看热情。', '依据：木火偏盛 · 金水为用']
+    ]
+  },
+  '钱的事': {
+    focus: '这次重点看财务节奏',
+    personality: [
+      '你对钱的敏感点在机会来了该不该出手。',
+      '冲动时会想快一点把局面打开，冷下来又会反复算风险。',
+      '这盘先看财星有没有落稳，再看有没有人事消耗。',
+      '最近更适合控节奏，不适合被情绪推着加码。'
+    ],
+    verify: [
+      ['你最近对投入产出这件事比较敏感，心里有一笔账一直在算。', '依据：财星受火气牵动'],
+      ['钱的压力不一定来自收入少，也可能来自节奏被打乱。', '依据：比劫与食伤同动'],
+      ['近期做财务决定，宜先留余地，再谈进攻。', '依据：金水偏弱 · 火势偏急']
+    ]
+  },
+  '感情关系': {
+    focus: '这次重点看关系互动',
+    personality: [
+      '你看关系很看态度，对方一句话没接好，你表面可能不说，心里会记。',
+      '你可以耐心沟通，但很烦反复解释同一件事。',
+      '关系里你需要被认真对待，也需要对方做事有回应。',
+      '这盘情绪来得快，最好别在火头上做最终决定。'
+    ],
+    verify: [
+      ['你在关系里很怕对方敷衍，敷衍比吵架更伤你。', '依据：日主甲木 · 火旺泄气'],
+      ['你嘴上可以给机会，但心里扣分以后很难完全回到原样。', '依据：官杀弱 · 食伤重'],
+      ['近期关系判断，要看对方行动，不要只听一句好话。', '依据：流年触发关系宫']
+    ]
+  },
+  '最近不顺': {
+    focus: '这次重点看近期卡点',
+    personality: [
+      '你这阵子容易觉得很多事都要自己顶，别人帮不上忙。',
+      '真正消耗你的，是事情堆在一起没有喘气口。',
+      '这盘火气重，越急越容易判断偏快。',
+      '先把节奏压下来，很多事会比硬冲更容易转开。'
+    ],
+    verify: [
+      ['最近你容易睡不踏实，脑子停不下来。', '依据：火旺扰神 · 水弱'],
+      ['你对身边人的效率会更挑剔，容易觉得别人慢。', '依据：木火急动'],
+      ['近期先处理最卡的一件事，不适合同时开太多线。', '依据：流月冲动 · 需收束']
+    ]
+  },
+  'default': {
+    focus: '这次先看整体状态',
+    personality: [
+      '甲木生在午月，满盘火旺。',
+      '脑子转得快，遇事先动，随后才细想。',
+      '人情上讲义气，碰到拖拉的人会烦。',
+      '做事有冲劲，真正卡住你的多半是节奏。'
+    ],
+    verify: [
+      ['你做事反应快，别人拖太久，你嘴上可能不催，心里已经开始烦。', '依据：甲木日主 · 午月火旺'],
+      ['这两年你对“要不要换一个方向”这件事，想过不止一次。', '依据：当前大运与流年触发'],
+      ['你对关系很看态度，一句话没接好，后面就会慢慢扣分。', '依据：火旺木急 · 金水偏弱']
+    ]
+  }
+};
 
 function showScreen(name) {
   screens.forEach(s => {
@@ -2382,6 +2535,93 @@ function showScreen(name) {
     }
   });
 
+}
+
+function detectTopic(question) {
+  if (!question) return 'default';
+  if (/工作|事业|方向|创业|老板|项目|职业/.test(question)) return '事业方向';
+  if (/钱|财|亏|投资|收入|生意|客户|订单/.test(question)) return '钱的事';
+  if (/感情|婚|恋|对象|关系|分手|复合|伴侣/.test(question)) return '感情关系';
+  if (/不顺|焦虑|累|烦|卡|压力|健康|睡/.test(question)) return '最近不顺';
+  return 'default';
+}
+
+function safeText(value) {
+  return String(value ?? '').replace(/[&<>"']/g, char => ({
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#39;'
+  })[char]);
+}
+
+function collectCase() {
+  const question = document.getElementById('question-input').value.trim();
+  const birth = document.getElementById('birth-input').value.trim();
+  const city = document.getElementById('city-input').value.trim();
+  const shichen = document.querySelector('.shichen-item.active')?.childNodes[0]?.textContent.trim() || '午时';
+  const gender = document.querySelector('.gender-btn.active')?.textContent.trim() || '男（乾造）';
+  const topic = detectTopic(question);
+  return {
+    question: question || topicReadings.default.focus,
+    birth: birth || '1990 年 6 月 15 日',
+    city: city || '成都',
+    shichen,
+    gender,
+    topic,
+    savedAt: new Date().toISOString()
+  };
+}
+
+function submitPaipan() {
+  appState.case = collectCase();
+  appState.reading = topicReadings[appState.case.topic] || topicReadings.default;
+  verifyState.clear();
+  renderCase();
+  saveState(false);
+  showScreen('result');
+}
+
+function renderCase() {
+  const currentCase = appState.case || collectCase();
+  const reading = appState.reading || topicReadings[currentCase.topic] || topicReadings.default;
+  const caseLine = `${currentCase.birth} · ${currentCase.shichen} · ${currentCase.city} · ${currentCase.gender}`;
+  const caseStrip = document.getElementById('case-strip');
+  if (caseStrip) {
+    caseStrip.innerHTML = `<strong>${safeText(reading.focus)}</strong>${safeText(currentCase.question)}<br>${safeText(caseLine)}`;
+  }
+
+  const personality = document.getElementById('personality-content');
+  if (personality) {
+    personality.innerHTML = reading.personality.join('<br>');
+  }
+
+  const verifyList = document.getElementById('verify-list');
+  if (verifyList) {
+    verifyList.innerHTML = reading.verify.map((item, index) => {
+      const active = verifyState.get(index);
+      return `
+        <div class="verify-item" data-index="${index}">
+          <p>${safeText(item[0])}</p>
+          <span class="verify-source">${safeText(item[1])}</span>
+          <div class="verify-actions">
+            ${['准','不准','补充'].map(label => `<button class="${active === label ? 'active' : ''}" onclick="setVerify(${index}, '${label}')">${label}</button>`).join('')}
+          </div>
+        </div>
+      `;
+    }).join('');
+  }
+
+  renderVerifySummary();
+  renderHandoff();
+  renderMine();
+}
+
+function setVerify(index, value) {
+  verifyState.set(index, value);
+  renderCase();
+  saveState(false);
 }
 
 // Interactive elements
@@ -2403,7 +2643,8 @@ document.querySelectorAll('.city-chip').forEach(chip => {
   chip.addEventListener('click', function() {
     document.querySelectorAll('.city-chip').forEach(c => c.classList.remove('active'));
     this.classList.add('active');
-    document.querySelector('.form-input[value]').value = this.textContent;
+    const input = this.closest('.form-group').querySelector('.form-input');
+    if (input) input.value = this.textContent;
   });
 });
 
@@ -2415,8 +2656,6 @@ document.querySelectorAll('.question-chip').forEach(chip => {
     if (input) input.value = this.textContent;
   });
 });
-
-const verifyState = new Map();
 
 function renderVerifySummary() {
   const values = Array.from(verifyState.values());
@@ -2433,16 +2672,95 @@ function renderVerifySummary() {
   });
 }
 
-document.querySelectorAll('.verify-item').forEach((item, index) => {
-  item.querySelectorAll('.verify-actions button').forEach(btn => {
-    btn.addEventListener('click', function() {
-      item.querySelectorAll('.verify-actions button').forEach(b => b.classList.remove('active'));
-      this.classList.add('active');
-      verifyState.set(index, this.textContent.trim());
-      renderVerifySummary();
+function renderHandoff() {
+  const handoff = document.getElementById('master-handoff');
+  if (!handoff) return;
+  if (!appState.case) {
+    handoff.innerHTML = '<strong>交接单</strong>还没有排盘记录。先排盘，再带着问题和初验反馈找师傅。';
+    return;
+  }
+  const values = Array.from(verifyState.values());
+  const hit = values.filter(v => v === '准').length;
+  const miss = values.filter(v => v === '不准').length;
+  const more = values.filter(v => v === '补充').length;
+  handoff.innerHTML = `
+    <strong>交接单</strong>
+    问事：${safeText(appState.case.question)}<br>
+    出生：${safeText(appState.case.birth)} · ${safeText(appState.case.shichen)} · ${safeText(appState.case.city)} · ${safeText(appState.case.gender)}<br>
+    初验：准 ${hit} 条，不准 ${miss} 条，补充 ${more} 条
+  `;
+}
+
+function renderMine() {
+  const tag = document.querySelector('.profile-info .tag');
+  if (tag && appState.case) {
+    tag.textContent = `${appState.case.topic === 'default' ? '整体状态' : appState.case.topic} · ${appState.case.shichen} · ${appState.case.city}`;
+  }
+}
+
+function saveState(showToast) {
+  const payload = {
+    case: appState.case,
+    readingKey: appState.case?.topic || 'default',
+    selectedMaster: appState.selectedMaster,
+    feedback: Object.fromEntries(verifyState)
+  };
+  localStorage.setItem(storageKey, JSON.stringify(payload));
+  if (showToast) alert('盘面已保存到本机浏览器');
+}
+
+function restoreState() {
+  try {
+    const raw = localStorage.getItem(storageKey);
+    if (!raw) {
+      appState.case = collectCase();
+      appState.reading = topicReadings.default;
+      renderCase();
+      return;
+    }
+    const payload = JSON.parse(raw);
+    appState.case = payload.case || collectCase();
+    appState.reading = topicReadings[payload.readingKey || appState.case.topic] || topicReadings.default;
+    appState.selectedMaster = payload.selectedMaster || null;
+    verifyState.clear();
+    Object.entries(payload.feedback || {}).forEach(([key, value]) => {
+      verifyState.set(Number(key), value);
     });
-  });
-});
+    renderCase();
+  } catch (error) {
+    appState.case = collectCase();
+    appState.reading = topicReadings.default;
+    renderCase();
+  }
+}
+
+function shareCase() {
+  const currentCase = appState.case || collectCase();
+  const values = Array.from(verifyState.values());
+  const text = `传承八字\\n问事：${currentCase.question}\\n出生：${currentCase.birth} · ${currentCase.shichen} · ${currentCase.city}\\n初验反馈：${values.length ? values.join('、') : '未记录'}`;
+  if (navigator.clipboard?.writeText) {
+    navigator.clipboard.writeText(text).then(() => alert('分享文案已复制'));
+  } else {
+    alert(text);
+  }
+}
+
+function selectMaster(name, status, price) {
+  appState.selectedMaster = { name, status, price };
+  const panel = document.getElementById('consult-panel');
+  document.getElementById('consult-title').textContent = `${name} · ${status}`;
+  document.getElementById('consult-desc').textContent = `${price}。交接单会带上命盘、想问的事、初验反馈，师傅接手后先复核再回答。`;
+  panel.classList.remove('hidden');
+  saveState(false);
+}
+
+function startConsult(type) {
+  if (!appState.selectedMaster) return;
+  const currentCase = appState.case || collectCase();
+  alert(`${type}已生成\\n师傅：${appState.selectedMaster.name}\\n问事：${currentCase.question}\\n下一步接支付、排队和师傅后台。`);
+}
+
+restoreState();
 </script>
 
 </body>
