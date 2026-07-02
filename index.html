@@ -697,6 +697,171 @@ body {
   cursor: pointer;
 }
 
+.role-switch {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin: 0 24px 16px;
+}
+
+.role-switch button {
+  border: 1px solid rgba(0,0,0,0.08);
+  background: var(--surface);
+  color: var(--text2);
+  border-radius: 12px;
+  padding: 12px 8px;
+  font-family: var(--sans);
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.role-switch button.active {
+  border-color: var(--accent);
+  background: rgba(181,69,58,0.08);
+  color: var(--accent);
+}
+
+.auth-card,
+.order-card,
+.chat-card {
+  margin: 0 16px 12px;
+  background: var(--surface);
+  border-radius: 16px;
+  padding: 16px;
+  border: 1px solid rgba(0,0,0,0.05);
+}
+
+.auth-card .btn-primary,
+.chat-input-row .btn-primary { width: 100%; }
+
+.order-card h4 {
+  font-size: 15px;
+  color: var(--ink);
+  margin-bottom: 6px;
+}
+
+.order-meta,
+.order-desc {
+  font-size: 13px;
+  color: var(--text2);
+  line-height: 1.7;
+}
+
+.order-status {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 5px 10px;
+  border-radius: 999px;
+  background: rgba(181,69,58,0.08);
+  color: var(--accent);
+  font-size: 12px;
+}
+
+.order-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.order-actions button {
+  border: 1px solid rgba(0,0,0,0.08);
+  background: #fff;
+  border-radius: 12px;
+  padding: 10px 8px;
+  font-family: var(--sans);
+  color: var(--text2);
+  cursor: pointer;
+}
+
+.order-actions .primary {
+  border-color: var(--accent);
+  background: rgba(181,69,58,0.08);
+  color: var(--accent);
+}
+
+.chat-header-card {
+  margin: 0 16px 12px;
+  padding: 14px 16px;
+  background: #2D2D2D;
+  color: var(--bg);
+  border-radius: 16px;
+}
+
+.chat-header-card h3 {
+  font-family: var(--serif);
+  font-size: 16px;
+  margin-bottom: 4px;
+}
+
+.chat-header-card p {
+  color: rgba(245,240,232,0.72);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.message-list {
+  margin: 0 16px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.message {
+  max-width: 82%;
+  border-radius: 14px;
+  padding: 10px 12px;
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.message.user {
+  align-self: flex-end;
+  background: rgba(181,69,58,0.12);
+  color: var(--text);
+}
+
+.message.master,
+.message.system {
+  align-self: flex-start;
+  background: var(--surface);
+  color: var(--text2);
+  border: 1px solid rgba(0,0,0,0.04);
+}
+
+.chat-input-row {
+  margin: 0 16px 12px;
+  display: grid;
+  grid-template-columns: 1fr 72px;
+  gap: 8px;
+}
+
+.chat-input-row input {
+  border: 1px solid rgba(0,0,0,0.08);
+  border-radius: 12px;
+  background: var(--surface);
+  padding: 12px;
+  font-family: var(--sans);
+  font-size: 14px;
+  outline: none;
+}
+
+.media-row {
+  margin: 0 16px 24px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.media-row button {
+  border: 1px solid rgba(0,0,0,0.08);
+  background: var(--surface);
+  border-radius: 12px;
+  padding: 11px 8px;
+  font-family: var(--sans);
+  color: var(--text2);
+}
+
 /* Paywall */
 .paywall {
   margin: 24px;
@@ -2271,6 +2436,10 @@ body {
         </div>
       </div>
 
+      <div class="auth-card">
+        <button class="btn-primary" onclick="showScreen('masterdesk')">进入师傅工作台</button>
+      </div>
+
       <div class="platform-note">
         · 机器初判只做入口，真人师傅会独立复核<br>
         · 师傅批注/问事由真人师傅亲自完成<br>
@@ -2390,13 +2559,13 @@ body {
           <span class="badge" style="color: var(--text3)">即将上线</span>
           <span class="arrow">›</span>
         </div>
-        <div class="menu-item">
+        <div class="menu-item" onclick="showScreen('orders')">
           <span class="icon">🎙</span>
           <span class="label">问事记录</span>
-          <span class="badge" style="color: var(--text3)">即将上线</span>
+          <span class="badge" id="mine-order-badge">0</span>
           <span class="arrow">›</span>
         </div>
-        <div class="menu-item">
+        <div class="menu-item" onclick="showScreen('orders')">
           <span class="icon">📦</span>
           <span class="label">我的订单</span>
           <span class="arrow">›</span>
@@ -2420,9 +2589,9 @@ body {
           <span class="label">意见反馈</span>
           <span class="arrow">›</span>
         </div>
-        <div class="menu-item">
+        <div class="menu-item" onclick="showScreen('login')">
           <span class="icon">ℹ️</span>
-          <span class="label">关于我们</span>
+          <span class="label">登录 / 切换身份</span>
           <span class="arrow">›</span>
         </div>
       </div>
@@ -2438,17 +2607,110 @@ body {
       </div>
     </div>
 
+    <!-- ========== Login ========== -->
+    <div class="screen hidden" id="screen-login">
+      <div class="nav-bar">
+        <div class="nav-back" onclick="showScreen('mine')">←</div>
+        <div class="nav-title">登录</div>
+        <div class="nav-action"></div>
+      </div>
+
+      <div class="page-header" style="padding-top: 80px;">
+        <h2>先把身份定下来</h2>
+        <p>当前版本先做前端闭环，真实验证码和账号体系接后端。</p>
+      </div>
+
+      <div class="role-switch">
+        <button id="role-user" class="active" onclick="setLoginRole('user')">我是用户</button>
+        <button id="role-master" onclick="setLoginRole('master')">我是师傅</button>
+      </div>
+
+      <div class="auth-card">
+        <div class="form-group">
+          <label class="form-label">昵称</label>
+          <input class="form-input" id="login-name" value="Leslie">
+        </div>
+        <div class="form-group">
+          <label class="form-label">手机号</label>
+          <input class="form-input" id="login-phone" value="13800000000">
+        </div>
+        <button class="btn-primary" onclick="loginDemo()">进入</button>
+      </div>
+    </div>
+
+    <!-- ========== Orders ========== -->
+    <div class="screen hidden" id="screen-orders">
+      <div class="nav-bar">
+        <div class="nav-back" onclick="showScreen('mine')">←</div>
+        <div class="nav-title">问事记录</div>
+        <div class="nav-action"></div>
+      </div>
+
+      <div class="page-header" style="padding-top: 80px;">
+        <h2>订单</h2>
+        <p>下单、接单、聊天都会沉淀在这里。</p>
+      </div>
+
+      <div id="orders-list"></div>
+    </div>
+
+    <!-- ========== Chat ========== -->
+    <div class="screen hidden" id="screen-chat">
+      <div class="nav-bar">
+        <div class="nav-back" onclick="showScreen('orders')">←</div>
+        <div class="nav-title">问事对话</div>
+        <div class="nav-action"></div>
+      </div>
+
+      <div class="chat-header-card" style="margin-top: 78px;">
+        <h3 id="chat-title">问事对话</h3>
+        <p id="chat-subtitle">订单信息</p>
+      </div>
+
+      <div class="message-list" id="message-list"></div>
+
+      <div class="chat-input-row">
+        <input id="chat-input" placeholder="输入想补充的情况">
+        <button class="btn-primary" onclick="sendMessage()">发送</button>
+      </div>
+
+      <div class="media-row">
+        <button onclick="sendVoiceMessage()">发语音</button>
+        <button onclick="bookVideo()">约视频</button>
+      </div>
+    </div>
+
+    <!-- ========== Master Desk ========== -->
+    <div class="screen hidden" id="screen-masterdesk">
+      <div class="nav-bar">
+        <div class="nav-back" onclick="showScreen('master')">←</div>
+        <div class="nav-title">师傅工作台</div>
+        <div class="nav-action"></div>
+      </div>
+
+      <div class="page-header" style="padding-top: 80px;">
+        <h2>接单</h2>
+        <p>师傅看到交接单后接单，再进入聊天。</p>
+      </div>
+
+      <div id="masterdesk-list"></div>
+    </div>
+
   </div><!-- phone-inner -->
 </div><!-- phone -->
 
 <script>
-const screens = ['onboarding','paipan','result','report','master','fuyuan','mine'];
+const screens = ['onboarding','paipan','result','report','master','fuyuan','mine','login','orders','chat','masterdesk'];
 const storageKey = 'suanmingDemoCase.v1';
 const verifyState = new Map();
 const appState = {
   case: null,
   reading: null,
-  selectedMaster: null
+  selectedMaster: null,
+  account: { role: 'user', name: 'Leslie', phone: '13800000000' },
+  orders: [],
+  activeOrderId: null,
+  loginRole: 'user'
 };
 
 const topicReadings = {
@@ -2535,6 +2797,10 @@ function showScreen(name) {
     }
   });
 
+  if (name === 'orders') renderOrders();
+  if (name === 'masterdesk') renderMasterDesk();
+  if (name === 'chat') renderChat();
+  if (name === 'mine') renderMine();
 }
 
 function detectTopic(question) {
@@ -2692,10 +2958,14 @@ function renderHandoff() {
 }
 
 function renderMine() {
+  const name = document.querySelector('.profile-info .name');
   const tag = document.querySelector('.profile-info .tag');
+  const orderBadge = document.getElementById('mine-order-badge');
+  if (name) name.textContent = appState.account?.name || '未登录';
   if (tag && appState.case) {
     tag.textContent = `${appState.case.topic === 'default' ? '整体状态' : appState.case.topic} · ${appState.case.shichen} · ${appState.case.city}`;
   }
+  if (orderBadge) orderBadge.textContent = appState.orders.length;
 }
 
 function saveState(showToast) {
@@ -2703,6 +2973,9 @@ function saveState(showToast) {
     case: appState.case,
     readingKey: appState.case?.topic || 'default',
     selectedMaster: appState.selectedMaster,
+    account: appState.account,
+    orders: appState.orders,
+    activeOrderId: appState.activeOrderId,
     feedback: Object.fromEntries(verifyState)
   };
   localStorage.setItem(storageKey, JSON.stringify(payload));
@@ -2722,6 +2995,9 @@ function restoreState() {
     appState.case = payload.case || collectCase();
     appState.reading = topicReadings[payload.readingKey || appState.case.topic] || topicReadings.default;
     appState.selectedMaster = payload.selectedMaster || null;
+    appState.account = payload.account || appState.account;
+    appState.orders = Array.isArray(payload.orders) ? payload.orders : [];
+    appState.activeOrderId = payload.activeOrderId || null;
     verifyState.clear();
     Object.entries(payload.feedback || {}).forEach(([key, value]) => {
       verifyState.set(Number(key), value);
@@ -2757,7 +3033,139 @@ function selectMaster(name, status, price) {
 function startConsult(type) {
   if (!appState.selectedMaster) return;
   const currentCase = appState.case || collectCase();
-  alert(`${type}已生成\\n师傅：${appState.selectedMaster.name}\\n问事：${currentCase.question}\\n下一步接支付、排队和师傅后台。`);
+  const order = {
+    id: `SM${Date.now().toString().slice(-8)}`,
+    type,
+    master: appState.selectedMaster.name,
+    price: appState.selectedMaster.price,
+    status: '待接单',
+    question: currentCase.question,
+    caseLine: `${currentCase.birth} · ${currentCase.shichen} · ${currentCase.city} · ${currentCase.gender}`,
+    createdAt: new Date().toLocaleString('zh-CN', { hour12: false }),
+    messages: [
+      { from: 'system', text: '订单已创建，命盘和初验反馈已交给师傅。' },
+      { from: 'user', text: currentCase.question }
+    ]
+  };
+  appState.orders.unshift(order);
+  appState.activeOrderId = order.id;
+  saveState(false);
+  showScreen('orders');
+}
+
+function setLoginRole(role) {
+  appState.loginRole = role;
+  document.getElementById('role-user').classList.toggle('active', role === 'user');
+  document.getElementById('role-master').classList.toggle('active', role === 'master');
+}
+
+function loginDemo() {
+  appState.account = {
+    role: appState.loginRole,
+    name: document.getElementById('login-name').value.trim() || (appState.loginRole === 'master' ? '张师傅' : '用户'),
+    phone: document.getElementById('login-phone').value.trim() || '13800000000'
+  };
+  saveState(false);
+  showScreen(appState.account.role === 'master' ? 'masterdesk' : 'mine');
+}
+
+function getActiveOrder() {
+  return appState.orders.find(order => order.id === appState.activeOrderId) || appState.orders[0] || null;
+}
+
+function renderOrders() {
+  const list = document.getElementById('orders-list');
+  if (!list) return;
+  if (!appState.orders.length) {
+    list.innerHTML = '<div class="order-card"><h4>还没有订单</h4><p class="order-desc">先选一位师傅，发起文字问事或视频预约。</p></div>';
+    return;
+  }
+  list.innerHTML = appState.orders.map(order => `
+    <div class="order-card">
+      <h4>${safeText(order.type)} · ${safeText(order.master)}</h4>
+      <p class="order-meta">${safeText(order.id)} · ${safeText(order.createdAt)}</p>
+      <p class="order-desc">问事：${safeText(order.question)}<br>出生：${safeText(order.caseLine)}</p>
+      <span class="order-status">${safeText(order.status)}</span>
+      <div class="order-actions">
+        <button class="primary" onclick="openChat('${order.id}')">进入聊天</button>
+        <button onclick="showScreen('masterdesk')">师傅接单</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function renderMasterDesk() {
+  const list = document.getElementById('masterdesk-list');
+  if (!list) return;
+  if (!appState.orders.length) {
+    list.innerHTML = '<div class="order-card"><h4>暂无待接订单</h4><p class="order-desc">用户下单后，会在这里出现交接单。</p></div>';
+    return;
+  }
+  list.innerHTML = appState.orders.map(order => `
+    <div class="order-card">
+      <h4>${safeText(order.type)} · ${safeText(order.status)}</h4>
+      <p class="order-desc">用户问题：${safeText(order.question)}<br>命盘：${safeText(order.caseLine)}</p>
+      <div class="order-actions">
+        <button class="primary" onclick="acceptOrder('${order.id}')">接单</button>
+        <button onclick="openChat('${order.id}')">看对话</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function acceptOrder(orderId) {
+  const order = appState.orders.find(item => item.id === orderId);
+  if (!order) return;
+  order.status = '师傅已接单';
+  order.messages.push({ from: 'master', text: `${order.master}已接单。我先看你的盘和反馈，再问你两句关键情况。` });
+  appState.activeOrderId = order.id;
+  saveState(false);
+  showScreen('chat');
+}
+
+function openChat(orderId) {
+  appState.activeOrderId = orderId;
+  saveState(false);
+  showScreen('chat');
+}
+
+function renderChat() {
+  const order = getActiveOrder();
+  const title = document.getElementById('chat-title');
+  const subtitle = document.getElementById('chat-subtitle');
+  const list = document.getElementById('message-list');
+  if (!order || !title || !subtitle || !list) return;
+  title.textContent = `${order.master} · ${order.type}`;
+  subtitle.textContent = `${order.id} · ${order.status}`;
+  list.innerHTML = order.messages.map(msg => `<div class="message ${safeText(msg.from)}">${safeText(msg.text)}</div>`).join('');
+}
+
+function sendMessage() {
+  const order = getActiveOrder();
+  const input = document.getElementById('chat-input');
+  if (!order || !input || !input.value.trim()) return;
+  order.messages.push({ from: 'user', text: input.value.trim() });
+  if (order.status === '待接单') order.status = '待师傅接单';
+  input.value = '';
+  saveState(false);
+  renderChat();
+}
+
+function sendVoiceMessage() {
+  const order = getActiveOrder();
+  if (!order) return;
+  order.messages.push({ from: 'user', text: '发起了一条语音消息（前端模拟）' });
+  saveState(false);
+  renderChat();
+}
+
+function bookVideo() {
+  const order = getActiveOrder();
+  if (!order) return;
+  order.status = '已预约视频';
+  order.messages.push({ from: 'system', text: '视频预约已提交，等待师傅确认时间。' });
+  saveState(false);
+  renderChat();
 }
 
 restoreState();
