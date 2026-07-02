@@ -347,6 +347,29 @@ body {
   color: var(--accent);
 }
 
+.question-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.question-chip {
+  padding: 7px 12px;
+  border-radius: 18px;
+  border: none;
+  background: rgba(0,0,0,0.04);
+  color: var(--text2);
+  font-size: 13px;
+  cursor: pointer;
+  font-family: var(--sans);
+}
+
+.question-chip.active {
+  background: rgba(181,69,58,0.1);
+  color: var(--accent);
+}
+
 .form-submit {
   padding: 0 24px;
   margin-top: 12px;
@@ -526,6 +549,78 @@ body {
   color: var(--text);
 }
 
+.verification {
+  margin: 24px;
+}
+
+.verification h3 {
+  font-family: var(--serif);
+  font-size: 15px;
+  color: var(--ink);
+  margin-bottom: 8px;
+}
+
+.verification-intro {
+  font-size: 13px;
+  color: var(--text3);
+  line-height: 1.6;
+  margin-bottom: 12px;
+}
+
+.verify-item {
+  background: var(--surface);
+  border: 1px solid rgba(0,0,0,0.05);
+  border-radius: 14px;
+  padding: 14px;
+  margin-bottom: 10px;
+}
+
+.verify-item p {
+  font-size: 14px;
+  line-height: 1.8;
+  color: var(--text);
+}
+
+.verify-source {
+  display: block;
+  margin-top: 4px;
+  font-size: 11px;
+  color: var(--text3);
+}
+
+.verify-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.verify-actions button {
+  flex: 1;
+  border: 1px solid rgba(0,0,0,0.08);
+  background: #fff;
+  border-radius: 999px;
+  padding: 8px 0;
+  font-size: 13px;
+  color: var(--text2);
+  cursor: pointer;
+  font-family: var(--sans);
+}
+
+.verify-actions button.active {
+  border-color: var(--accent);
+  background: rgba(181,69,58,0.08);
+  color: var(--accent);
+}
+
+.verify-summary {
+  border-left: 3px solid var(--accent);
+  background: rgba(181,69,58,0.04);
+  padding: 12px 14px;
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--text2);
+}
+
 /* Paywall */
 .paywall {
   margin: 24px;
@@ -587,6 +682,32 @@ body {
   font-size: 12px;
   color: var(--text3);
   margin-top: 12px;
+}
+
+.handoff-card {
+  margin: 24px;
+  background: var(--ink);
+  color: var(--bg);
+  border-radius: 16px;
+  padding: 22px;
+}
+
+.handoff-card h4 {
+  font-family: var(--serif);
+  font-size: 17px;
+  margin-bottom: 8px;
+}
+
+.handoff-card p {
+  font-size: 13px;
+  line-height: 1.7;
+  color: rgba(245,240,232,0.72);
+  margin-bottom: 16px;
+}
+
+.handoff-card .btn-primary {
+  width: 100%;
+  padding: 14px;
 }
 
 /* Bottom actions */
@@ -1587,77 +1708,15 @@ body {
   font-size: 16px;
 }
 
-/* Page label (top-right corner for prototype) */
-.proto-label {
-  position: fixed;
-  top: 12px;
-  right: 12px;
-  background: var(--ink);
-  color: var(--bg);
-  padding: 6px 14px;
-  border-radius: 20px;
-  font-size: 12px;
-  z-index: 9999;
-  opacity: 0.6;
-}
-
-/* Screen navigator (prototype controls) */
-.proto-nav {
-  position: fixed;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  gap: 6px;
-  background: var(--ink);
-  padding: 6px 10px;
-  border-radius: 20px;
-  z-index: 9999;
-}
-
-.proto-nav button {
-  padding: 6px 14px;
-  border: none;
-  border-radius: 14px;
-  font-size: 12px;
-  cursor: pointer;
-  background: transparent;
-  color: rgba(245,240,232,0.5);
-  font-family: var(--sans);
-  transition: all 0.2s;
-  white-space: nowrap;
-}
-
-.proto-nav button.active {
-  background: var(--accent);
-  color: #fff;
-}
-
-.proto-nav button:hover {
-  color: var(--bg);
-}
 </style>
 </head>
 <body>
-
-<div class="proto-label">传承八字 · 原型预览</div>
-
-<!-- Prototype screen navigator -->
-<div class="proto-nav">
-  <button class="active" onclick="showScreen('onboarding')">引导</button>
-  <button onclick="showScreen('paipan')">排盘</button>
-  <button onclick="showScreen('result')">结果</button>
-  <button onclick="showScreen('report')">报告</button>
-  <button onclick="showScreen('master')">师傅</button>
-  <button onclick="showScreen('fuyuan')">福缘</button>
-  <button onclick="showScreen('mine')">我的</button>
-</div>
 
 <div class="phone">
   <div class="phone-inner">
 
     <!-- ========== Onboarding ========== -->
-    <div class="screen" id="screen-onboarding">
+    <div class="screen hidden" id="screen-onboarding">
       <div class="master-photo">
         <svg viewBox="0 0 24 24" fill="none" stroke="rgba(245,240,232,0.5)" stroke-width="1">
           <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
@@ -1671,13 +1730,25 @@ body {
     </div>
 
     <!-- ========== Paipan Input ========== -->
-    <div class="screen hidden" id="screen-paipan">
+    <div class="screen" id="screen-paipan">
       <div class="page-header">
-        <h2>请输入您的出生信息</h2>
-        <p>信息仅用于排盘，不会泄露</p>
+        <h2>排盘</h2>
+        <p>输入出生信息，先排出底盘</p>
       </div>
 
       <div class="form-section">
+        <div class="form-group">
+          <label class="form-label">想问的事</label>
+          <input class="form-input" type="text" placeholder="可不填。比如：要不要换工作？">
+          <p class="form-hint">填了之后，初判会重点看这一块</p>
+          <div class="question-chips">
+            <button class="question-chip">事业方向</button>
+            <button class="question-chip">钱的事</button>
+            <button class="question-chip">感情关系</button>
+            <button class="question-chip">最近不顺</button>
+          </div>
+        </div>
+
         <div class="form-group">
           <label class="form-label">出生日期</label>
           <input class="form-input" type="text" value="1990 年 6 月 15 日" readonly>
@@ -1823,11 +1894,42 @@ body {
         <h3>性格概述</h3>
         <div class="personality-content">
           甲木生在午月，满盘火旺。<br>
-          脑子转得快，做事果断，但耐心差。<br>
-          心里藏不住事，有什么说什么。<br>
-          对朋友真诚，但容易在感情里上头。<br>
-          你不是没能力，是太着急。
+          脑子转得快，遇事先动，随后才细想。<br>
+          人情上讲义气，碰到拖拉的人会烦。<br>
+          做事有冲劲，真正卡住你的多半是节奏。<br>
+          这盘先看火气，再看水来不来救。
         </div>
+      </div>
+
+      <div class="verification">
+        <h3>先验几句</h3>
+        <p class="verification-intro">先看这些点落不落在你身上。准的留下，不准的降权，师傅接手时会一起看。</p>
+
+        <div class="verify-item">
+          <p>你做事反应快，别人拖太久，你嘴上可能不催，心里已经开始烦。</p>
+          <span class="verify-source">依据：甲木日主 · 午月火旺</span>
+          <div class="verify-actions">
+            <button>准</button><button>不准</button><button>补充</button>
+          </div>
+        </div>
+
+        <div class="verify-item">
+          <p>这两年你对“要不要换一个方向”这件事，想过不止一次。</p>
+          <span class="verify-source">依据：当前大运与流年触发</span>
+          <div class="verify-actions">
+            <button>准</button><button>不准</button><button>补充</button>
+          </div>
+        </div>
+
+        <div class="verify-item">
+          <p>你对关系很看态度，一句话没接好，后面就会慢慢扣分。</p>
+          <span class="verify-source">依据：火旺木急 · 金水偏弱</span>
+          <div class="verify-actions">
+            <button>准</button><button>不准</button><button>补充</button>
+          </div>
+        </div>
+
+        <div class="verify-summary" id="verify-summary">已记录 0 条反馈。先点几条，再带着反馈找师傅。</div>
       </div>
 
       <div class="paywall">
@@ -1837,10 +1939,16 @@ body {
           <li>2026年详细运势（事业/财运/感情/健康）</li>
           <li>未来10年大运走势</li>
           <li>个性化开运建议</li>
-          <li>AI寄语</li>
+          <li>师傅复核要点</li>
         </ul>
         <button class="btn-primary" onclick="showScreen('report')">查看完整报告  ¥9.9</button>
         <p class="paywall-count">已有 12,847 人查看了自己的报告</p>
+      </div>
+
+      <div class="handoff-card">
+        <h4>带着反馈找师傅</h4>
+        <p>机器初判只负责开头。你点过的“准 / 不准 / 补充”，会作为交接信息给师傅，师傅先复核，再回答你真正想问的事。</p>
+        <button class="btn-primary" onclick="showScreen('master')">选真人师傅复核</button>
       </div>
 
       <div class="bottom-actions">
@@ -1880,7 +1988,7 @@ body {
         <p>先说过去，验一下盘。</p>
         <p>你在<span class="highlight">2017年</span>前后经历过一次重要选择，可能是换工作、搬城市、或者一段关系的结束。那一年丁酉，酉金冲你的日支，动荡是注定的。<span class="bold">如果你当时选了变，恭喜你，选对了。</span></p>
         <p>你这个人，优点和缺点是同一个东西：<span class="bold">快</span>。做决定快，行动快，翻脸也快。适合做需要爆发力的事，不适合需要慢慢熬的事。</p>
-        <p>你的盘里木火两旺，金水两弱。翻译过来就是：感性有余，理性不足。直觉很准，但容易冲动。你的大部分麻烦，都是在"太快"上面吃的亏。</p>
+        <p>你的盘里木火两旺，金水两弱。直觉来得快，行动也快；好处是敢做，麻烦也常出在快上。重要的事，留一点冷却时间。</p>
       </div>
 
       <div class="chapter">
@@ -1908,10 +2016,10 @@ body {
         <p>上半年稳，下半年有变动。具体看农历七月（公历8月），会有一个选择摆在你面前。这次别急，<span class="bold">想三天再决定</span>。你的盘里伤官旺，容易跟领导硬碰硬，今年忍一忍。</p>
 
         <p class="dimension">▸ 财运</p>
-        <p>正财平稳，<span class="highlight">偏财别碰</span>。你的盘不适合投机，适合靠本事赚。年底有一笔意外收入的可能，但不是天上掉的，是之前种下的因。</p>
+        <p>正财平稳，<span class="highlight">偏财少碰</span>。你的盘更适合靠本事、项目、长期客户来进钱。年底有一笔回款或额外收入的机会，来源多半和前面做过的事有关。</p>
 
         <p class="dimension">▸ 感情</p>
-        <p>单身的：桃花在秋天，主动不如被动。有对象的：上半年容易吵，忍过去了下半年反而更好。<span class="dim">你们吵不是不爱，是你太急，对方太慢。</span></p>
+        <p>单身的：桃花在秋天，先观察，再靠近。有对象的：上半年容易因为节奏不同起争执，下半年会缓一些。<span class="dim">你急，对方慢，话一赶就容易顶上。</span></p>
 
         <p class="dimension">▸ 健康</p>
         <p>火旺伤金，注意呼吸系统和皮肤。<span class="bold">少熬夜，你的身体扛不住你的脑子。</span>夏天少吃辛辣，多喝水。</p>
@@ -1980,14 +2088,14 @@ body {
         <div class="product-img"></div>
         <div class="product-info">
           <p class="name">五行补木 · 小叶紫檀手串</p>
-          <p class="desc">根据您的五行缺失定制</p>
+          <p class="desc">按五行偏弱处推荐</p>
           <p class="price">¥199</p>
         </div>
         <span class="product-arrow">›</span>
       </div>
 
       <div class="master-note">
-        <p class="label">▎AI寄语</p>
+        <p class="label">▎复核提示</p>
         <blockquote>
           「此盘木火通明，是个聪明盘。<br>
           聪明人最容易犯的错就是想太多做太少。<br>
@@ -1999,7 +2107,7 @@ body {
       <div class="upgrade-card">
         <h4>想让真师傅亲自看看你的盘？</h4>
         <p>当前3位师傅在线 · 24小时内送达 · ¥99起</p>
-        <button class="btn-primary">选师傅批注</button>
+        <button class="btn-primary" onclick="showScreen('master')">选师傅批注</button>
       </div>
 
       <div class="bottom-actions" style="margin-bottom: 100px;">
@@ -2023,8 +2131,12 @@ body {
         </div>
         <div class="brand-text">
           <h3>传承八字 · 严选师傅</h3>
-          <p>每位师傅均经平台考核认证</p>
+          <p>师傅会看到命盘和你的初验反馈</p>
         </div>
+      </div>
+
+      <div class="verify-summary" style="margin: 0 16px 16px;">
+        已带入初验反馈：准 0 条，不准 0 条。你在结果页点过的反馈，会先给师傅看。
       </div>
 
       <h3 class="section-title">在线师傅</h3>
@@ -2044,8 +2156,8 @@ body {
             <p class="mc-title">从业18年 · 山东</p>
           </div>
         </div>
-        <p class="mc-sig">「看盘要看整体，不能只看一柱。八字是地图，不是判决书。」</p>
-        <span class="mc-action">问事 →</span>
+        <p class="mc-sig">「先看盘，再看你反馈。命盘只是地图，路怎么走还得看你眼下的事。」</p>
+        <span class="mc-action">复核 →</span>
       </div>
 
       <!-- Master 2: Busy -->
@@ -2087,7 +2199,7 @@ body {
       </div>
 
       <div class="platform-note">
-        · AI报告由平台AI生成（标注"AI生成"）<br>
+        · 机器初判只做入口，真人师傅会独立复核<br>
         · 师傅批注/问事由真人师傅亲自完成<br>
         · 所有师傅经过平台考核认证<br>
         · 服务不满意可申请退款
@@ -2108,7 +2220,7 @@ body {
         <h2>福缘</h2>
       </div>
 
-      <p class="rec-label">根据您的八字（甲木日主 · 缺土）推荐</p>
+      <p class="rec-label">按你的八字（甲木日主 · 缺土）推荐</p>
 
       <div class="products-grid">
         <div class="product-card">
@@ -2270,13 +2382,6 @@ function showScreen(name) {
     }
   });
 
-  // Update proto nav buttons
-  document.querySelectorAll('.proto-nav button').forEach(btn => {
-    btn.classList.remove('active');
-  });
-  const btns = document.querySelectorAll('.proto-nav button');
-  const idx = screens.indexOf(name);
-  if (idx >= 0 && btns[idx]) btns[idx].classList.add('active');
 }
 
 // Interactive elements
@@ -2299,6 +2404,43 @@ document.querySelectorAll('.city-chip').forEach(chip => {
     document.querySelectorAll('.city-chip').forEach(c => c.classList.remove('active'));
     this.classList.add('active');
     document.querySelector('.form-input[value]').value = this.textContent;
+  });
+});
+
+document.querySelectorAll('.question-chip').forEach(chip => {
+  chip.addEventListener('click', function() {
+    document.querySelectorAll('.question-chip').forEach(c => c.classList.remove('active'));
+    this.classList.add('active');
+    const input = this.closest('.form-group').querySelector('.form-input');
+    if (input) input.value = this.textContent;
+  });
+});
+
+const verifyState = new Map();
+
+function renderVerifySummary() {
+  const values = Array.from(verifyState.values());
+  const hit = values.filter(v => v === '准').length;
+  const miss = values.filter(v => v === '不准').length;
+  const more = values.filter(v => v === '补充').length;
+  const total = values.length;
+  const text = total
+    ? `已记录 ${total} 条反馈：准 ${hit}，不准 ${miss}，补充 ${more}。师傅接手时会先看这些。`
+    : '已记录 0 条反馈。先点几条，再带着反馈找师傅。';
+
+  document.querySelectorAll('.verify-summary').forEach(el => {
+    el.textContent = text;
+  });
+}
+
+document.querySelectorAll('.verify-item').forEach((item, index) => {
+  item.querySelectorAll('.verify-actions button').forEach(btn => {
+    btn.addEventListener('click', function() {
+      item.querySelectorAll('.verify-actions button').forEach(b => b.classList.remove('active'));
+      this.classList.add('active');
+      verifyState.set(index, this.textContent.trim());
+      renderVerifySummary();
+    });
   });
 });
 </script>
